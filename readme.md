@@ -22,7 +22,7 @@ SSPの音声合成機能や[【SSP】伺かをCeVIO AIの力を借りてフル�
 ## 曜日ごとのパーソナリティ
 各曜日毎に人に振れるように作りました。<br>
 GitHub上に簡単なテキストをアップロードしていただけたら、毎週読み込みます。<br>
-詳細はReadMe_Personality.mdをご確認ください。<br>
+詳細は [RadioMidnight/ReadMe_Personality.md at master · ambergon/RadioMidnight · GitHub](https://github.com/ambergon/RadioMidnight/blob/master/ReadMe_Personality.md) をご確認ください。<br>
 
 
 ## ゲストパーソナリティ
