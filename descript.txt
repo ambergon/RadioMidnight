@@ -1,0 +1,17 @@
+Charset,UTF-8
+readme.charset,UTF-8
+readme.readme.md
+type,plugin
+name,深夜零時三十分頃のラジオ
+craftman,ambergon
+filename,yaya.dll
+
+id,baf40160-90bf-11ed-b05e-0800200c9a66
+
+
+
+secondchangeinterval,60
+otherghosttalk,0
+
+//更新url
+//homeurl,

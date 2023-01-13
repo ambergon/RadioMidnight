@@ -1,0 +1,150 @@
+
+//起動時アップデートだとつけっぱなしで死ぬ。
+//作業の途中でもつい手を止めちゃうような。
+//## 自動アップデート機能が欲しい。
+
+//guest
+//https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec
+
+//私個人の奴。
+//https://script.google.com/macros/s/AKfycbwJrOy4PSA6Yfeo-vStWhOnhU39CdAN6NiYCVee3sIs-p-4MtNwviYdMyuEd3bXZfCebQ/exec
+
+
+
+
+
+
+
+version {
+	"origin/1.0"
+}
+OnPluginLoad.Self {
+    if ( BootCheck == "" ) {
+        BootCheck = TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))
+    }
+    if ( GuestTalkCount == "" ) {
+        GuestTalkCount = "0"
+    }
+}
+
+OnPluginUnload.Self {
+}
+
+
+OnSecondChange {
+    if ( TOSTR( hour ) == "0"  && TOSTR( minute ) == "30" ) {
+        //"ラジオ開始。"
+        WeekRadio()
+    }
+}
+
+
+//今回のプラグインではEVALは使わないように。
+WeekRadio {
+    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
+    if weekday == 0 {
+        //"Sun"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Sun.Url ) 
+        //前回とおんなじもしくは空の場合
+        if ( Sun.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Sun.OldText = _HtmlText
+        }
+
+    } elseif weekday == 1 {
+        //"Mon"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Mon.Url )
+        if ( Mon.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Mon.OldText = _HtmlText
+        }
+
+    } elseif weekday == 2 {
+        //"Tues"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Tues.Url )
+        if ( Tues.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Tues.OldText = _HtmlText
+        }
+
+    } elseif weekday == 3 {
+        //"Wednes"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Wednes.Url ) 
+        if ( Wednes.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Wednes.OldText = _HtmlText
+        }
+
+    } elseif weekday == 4 {
+        //"Thurs"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Thurs.Url )
+        if ( Thurs.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Thurs.OldText = _HtmlText
+        }
+
+    } elseif weekday == 5 {
+        //"Fri"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Fri.Url )
+        if ( Fri.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Fri.OldText = _HtmlText
+        }
+
+    } else {
+        //"Satur"
+        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Satur.Url )
+        if ( Satur.OldText == _HtmlText || _HtmlText == "" ) {
+            TalkGuestPersonality()
+        } else {
+            TalkRadioText( _HtmlText )
+            Satur.OldText = _HtmlText
+        }
+    }
+}
+
+
+//無かった時の担当。
+//カウントを組んで実行したいね。
+//しかし同じものが二回表示されるのもおかしな話。
+//処理の軽そうな方法を考えなくては。
+TalkGuestPersonality  {
+    _GuestTalk[0] = "aa"
+    _GuestTalk[1] = "bb"
+    _GuestTalk[2] = "cc"
+
+    if ( _GuestTalk[GuestTalkCount] != "" ) {
+        TalkRadioText( _GuestTalk[_count] )
+        GuestTalkCount = TOINT(GuestTalkCount) + 1
+    } else {
+        TalkRadioText( "ごめんね。ストックが切れてるや。")
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

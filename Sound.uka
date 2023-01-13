@@ -1,0 +1,25 @@
+
+SoundStart { 
+    _file = _argv[0] 
+
+    //フェードイン 
+    _fadeIn = "\![sound,loop,%( _file ),--volume=0]" 
+    for _i = 0 ; _i < 100 ; _i++ ; { 
+        _fadeInText = "\_w[50]\![sound,option,%( _file ),--volume=%(_i)]" 
+        _fadeIn = _fadeIn + _fadeInText 
+    } 
+    _fadeIn 
+} 
+SoundStop { 
+    _file = _argv[0] 
+
+    //フェードアウト 
+    _fadeOut = "" 
+    for _i = 100 ; _i > O ; _i = _i - 1 ; { 
+        _fadeOutText = "\_w[50]\![sound,option,%( _file ),--volume=%(_i)]" 
+        _fadeOut = _fadeOut + _fadeOutText 
+    } 
+    _fadeOut = _fadeOut + "\![sound,stop]" 
+    _fadeOut 
+} 
+

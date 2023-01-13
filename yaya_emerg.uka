@@ -1,0 +1,17 @@
+
+
+
+
+
+
+version {
+	"origin/1.0"
+}
+OnPluginLoad.Self {
+}
+
+OnPluginUnload.Self {
+}
+OnMenuExec {
+    "メインの辞書でエラーが出ています。"
+}

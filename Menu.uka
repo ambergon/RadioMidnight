@@ -1,0 +1,283 @@
+
+
+
+Music.Path          { "music/晴れの日の私.wav"  }
+//Music.Delay         { "0"                   }
+Music.Delay         { "28000"                   }
+
+
+
+Mon.Person          { "" }
+Tues.Person         { "" }
+Wednes.Person       { "安馬" }
+Wednes.HomePage     { "https://twitter.com/Sc_lFoxGon" }
+Wednes.Hagaki       { "https://script.google.com/macros/s/AKfycbwJrOy4PSA6Yfeo-vStWhOnhU39CdAN6NiYCVee3sIs-p-4MtNwviYdMyuEd3bXZfCebQ/exec"}
+Wednes.Url          { "https://raw.githubusercontent.com/ambergon/RadioText/master/ReadMe.txaat"}
+Thurs.Person        { "" }
+Fri.Person          { "" }
+Satur.Person        { "" }
+Sun.Person          { "" }
+
+
+OnPluginLoad.Menu {
+    if ( RadioName == "" ) { RadioName = "Guest" }
+    ReadMeTexts = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
+}
+OnPluginUnload.Menu {
+    ERASEVAR( "ReadMeTexts" )
+    ERASEVAR( "RadioTextDraft" )
+}
+
+
+OnMenuExec {
+    MainContents()
+    //WeekRadio()
+}
+
+
+MainContents {
+    "\b[2]\_q\n[half]/
+    %( WeatherMenu          )\n/
+    %( RadioBoard           )\n/
+    %( UserData             )/
+    %( SaveClickContent     )\n/
+    %( GuestPersonality     )\n/
+    %( ReadMeTexts          )\n/
+	\n[half]\_q\x[noclear]\e"
+}
+
+
+//送信テキストのラジオ化テストと問題がなければ送信する。
+GuestPersonality {
+    "【寄稿する】\n/
+    \_a[OnContributionTestUrlDialog]URLをテストする。\_a\n/
+    \_a[OnContributionTestDialog]単発原稿をテストする。\_a\n/
+    \_a[OnContribution]単発原稿を送信する。\_a\n/
+    "
+}
+
+OnContributionTestUrlDialog {
+    "\_qテストしたいURLを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\n\nURLの場合は改行ごとに\\w3と改行が挿入されます。\![open,inputbox,OnContributionTestUrl]\_q"
+}
+OnContributionTestUrl {
+    _url = reference[0]
+    //発声
+    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
+    _text = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
+    if ( _text == "" ){
+        "何も読み取れませんでした。"
+    } else {
+        TalkRadioText( _text )
+    }
+}
+
+OnContributionTestDialog {
+    "\_qテストしたいテキストを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\![open,inputbox,OnContributionTest]\_q"
+}
+//テストテキストを表示し、
+//下書きを保存する。
+OnContributionTest {
+    RadioTextDraft = reference[0]
+    //発声
+    TalkRadioText( RadioTextDraft )
+}
+
+//最後にテスト実行した内容を保存しておけばいいか。
+OnContribution {
+    _Guest.Url = "https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec"
+    if ( RadioName == "") {
+        RN = "Guest"
+    } else {
+        RN = RadioName
+    }
+
+    _text       = RadioTextDraft
+    ERASEVAR( "RadioTextDraft" )
+
+    //送信用に変換
+    _text       = CheckRadioText( _text )
+    //こっち側だけescapeしないと正常に届かないな。
+    //[をescapeすると向こうで\[で残る。
+    _text       = REPLACE( _text , "]" , "\]" )
+
+    if ( _text != "" ){
+        "\![execute,http-POST,%(_Guest.Url),--param=message_body=%(BootCheck);%(RN);%(_text),--async=OnWebClapModoki,--timeout=5]送信しました。"
+    } else {
+        MainContents()
+    }
+}
+
+
+
+
+
+RadioBoard {
+	"【放送予定】\n/
+	月曜日 : 深夜 0:30～ "+ ExistHomePage( Mon.Person   ,Mon.HomePage   ) + Space(Mon.Person)    +"\_a[OnMakeHagaki,%( Mon.Person    ),%( Mon.Hagaki    )]"+ ExistHagakiUrl( Mon.Hagaki   ) +"\_a\n/
+	火曜日 : 深夜 0:30～ "+ ExistHomePage( Tues.Person  ,Tues.HomePage  ) + Space(Tues.Person)   +"\_a[OnMakeHagaki,%( Tues.Person   ),%( Tues.Hagaki   )]"+ ExistHagakiUrl( Tues.Hagaki  ) +"\_a\n/
+	水曜日 : 深夜 0:30～ "+ ExistHomePage( Wednes.Person,Wednes.HomePage) + Space(Wednes.Person) +"\_a[OnMakeHagaki,%( Wednes.Person ),%( Wednes.Hagaki )]"+ ExistHagakiUrl( Wednes.Hagaki ) +"\_a\n/
+	木曜日 : 深夜 0:30～ "+ ExistHomePage( Thurs.Person ,Thurs.HomePage ) + Space(Thurs.Person)  +"\_a[OnMakeHagaki,%( Thurs.Person  ),%( Thurs.Hagaki  )]"+ ExistHagakiUrl( Thurs.Hagaki ) +"\_a\n/
+	金曜日 : 深夜 0:30～ "+ ExistHomePage( Fri.Person   ,Fri.HomePage   ) + Space(Fri.Person)    +"\_a[OnMakeHagaki,%( Fri.Person    ),%( Fir.Hagaki    )]"+ ExistHagakiUrl( Fir.Hagaki   ) +"\_a\n/
+	土曜日 : 深夜 0:30～ "+ ExistHomePage( Satur.Person ,Satur.HomePage ) + Space(Satur.Person)  +"\_a[OnMakeHagaki,%( Satur.Person  ),%( Satur.Hagaki  )]"+ ExistHagakiUrl( Satur.Hagaki ) +"\_a\n/
+	日曜日 : 深夜 0:30～ "+ ExistHomePage( Sun.Person   ,Sun.HomePage   ) + Space(Sun.Person)    +"\_a[OnMakeHagaki,%( Sun.Person    ),%( Sun.Hagaki    )]"+ ExistHagakiUrl( Sun.Hagaki   ) +"\_a\n/
+    "
+}
+
+
+//宛先にHomePageがあればリンク付きにするか。
+//無ければ名前だけを返そう。
+ExistHomePage {
+    _man        = _argv[0]
+    _homepage   = _argv[1]
+    if ( _homepage == "" ) {
+        if ( _man == "" ) {
+            "\_a[OnOpenHomePageDialog,https://ukadon.shillest.net/@ambergon]募集中\_a"
+        } else {
+            _man
+        }
+    } else {
+        "\_a[OnOpenHomePageDialog,%(_homepage)]%(_man)\_a"
+    }
+}
+
+OnOpenHomePageDialog {
+    _url = reference[0]
+    "\_q\_a[OnOpenHomePage,%(_url)]リンク : %(_url) を開きます。よろしいですか。\_q"
+}
+OnOpenHomePage {
+    _url = reference[0]
+    "\j[%(_url)]"
+}
+
+
+
+
+
+
+UserData {
+	"【あなたの情報】\n/
+    貴方のラジオネーム : %(RadioName)\n/
+    \_a[OnChangeRadioNameDialog]ラジオネームを変更する。\_a\n"
+}
+SaveClickContent {
+    _OldLinkText = ""
+    if ( alink_URL != "" ) { _OldLinkText = "【取得項目】\n\n\_a[OnOpenLinkDialog]%(alink_TITLE)\_a\n" }
+    _OldLinkText
+}
+
+
+//Aタグを使うと逃げれてしまう問題があるな。
+//なので、ここで発言はさせない。
+OnAnchorSelectEx {
+    alink_TITLE = reference[0]
+    alink_URL   = reference[1]
+}
+OnOpenLinkDialog {
+    "\_q\_a[OnOpenLink]リンク : %(alink_URL) を開きます。よろしいですか。\_q"
+}
+OnOpenLink {
+    "\j[%(alink_URL)]"
+    alink_TITLE = ""
+    alink_URL   = ""
+}
+
+
+//ラジオネーム変更関数群
+OnChangeRadioNameDialog {
+    "\_q現在の貴方のラジオネーム : %(RadioName) \![open,inputbox,OnChangeRadioName]\_q"
+}
+OnChangeRadioName {
+    RadioName  = reference[0]
+    "\_q現在の貴方のラジオネーム : %(RadioName)"
+}
+
+
+
+//14文字を超える場合は特に何もしない。
+//葉書を送るのスペース埋め
+Space {
+    _str = ""
+    _len = GETSTRBYTES( _argv[0])
+    _check = 14 - TOINT(_len)
+    if ( 0 < _check ) {
+        for _i = 0 ; _i < _check ; _i++ {
+            _str = _str + " "
+        }
+    }
+    _str
+}
+
+
+CheckRadioText {
+    _SendText  = _argv[0]
+    //送信関係
+    _SendText  = REPLACE( _SendText , ";" , "" )
+    _SendText  = REPLACE( _SendText , "," , "" )
+    _SendText  = REPLACE( _SendText , "?" , "？" )
+
+    _SendText  = REPLACE( _SendText , "'" , "" )
+    _SendText  = REPLACE( _SendText , '"' , "" )
+
+    _SendText  = REPLACE( _SendText , '|' , "" )
+    //%変数名でそのまま呼び出せてしまう。
+    _SendText  = REPLACE( _SendText , "#" , "" )
+    _SendText  = REPLACE( _SendText , "{" , "" )
+    _SendText  = REPLACE( _SendText , "}" , "" )
+    _SendText  = REPLACE( _SendText , "(" , "" )
+    _SendText  = REPLACE( _SendText , ")" , "" )
+
+    //GAS側で、スペースが+に置き換わってしまうので適当に使いやすく。
+    _SendText  = REPLACE( _SendText , "　" , " " )
+    _SendText  = REPLACE( _SendText , " " , "_" )
+
+    //除去後に何かが完成するのは気に食わんので_
+    _SendText  = REPLACE( _SendText , "%" , "パーセント" )
+    _SendText  = RE_REPLACE( _SendText , "\\j\[.*?\]" , "_" )
+    _SendText  = RE_REPLACE( _SendText , "\\!\[.*?\]" , "_" )
+    _SendText
+}
+
+
+TalkRadioText {
+    _text       = _argv[0]
+
+    //ネットから落としたテキストはこの段階でサニタイズが入るようにするか。
+    _text       = CheckRadioText( _text )
+
+    //空送信・空白送信除去
+    _CheckText  = REPLACE( _text , " " , "" )
+    _CheckText  = REPLACE( _CheckText , "　" , "" )
+
+    if ( _CheckText != "" ) {
+        _weatherText = GetWeather()
+        _fileBGM     = Music.Path
+        _Delay       = Music.Delay
+
+        //クリック等バルーンを消せないように。
+        _Option.RegistClose         = "\![enter,nouserbreakmode]"
+        _Option.RegistClose.END     = "\![leave,nouserbreakmode]"
+
+        //他のイベント通知で割り込まれたりしないように。
+        _Option.RegistInterrupt      = "\t"
+        _Option.RegistInterrupt.END  = ""
+
+        _Options        = _Option.RegistClose       + _Option.RegistInterrupt
+        _Options.END    = _Option.RegistClose.END   + _Option.RegistInterrupt.End
+
+        _SoundBefore    = _Options      + "\b[-1]" + SoundStart( _fileBGM ) + "\_w[ %( _Delay ) ]\b[2]"
+        _SoundAfter     = "\_w[ %( _Delay ) ]" + SoundStop(  _fileBGM ) + _Options.END
+
+        _talk            =  _SoundBefore + _text + "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _weatherText + "\0" + _SoundAfter + "\e"
+        _talk
+    } else {
+        MainContents()
+    }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,41 @@
+
+
+OnPluginLoad.ReadMe {
+}
+
+OnPluginUnload.ReadMe {
+}
+
+
+OnReadMeList {
+    "\_q/
+    \n[half]/
+	 【説明】\n/
+	\![*]\q[リスナーとして,OnHowToListener]\n/
+	\![*]\q[パーソナリティとして,OnHowToPersonality]\n/
+	\![*]\q[ゲストパーソナリティとして,OnHowToGuestPersonality]\n/
+	\![*]\q[特にない,]\n/
+	\n[half]\e"
+}
+
+
+
+
+
+//めんどくさいからReadME用のGithubにそれぞれ作ってリンクを飛ばすか。 
+OnHowToListener {
+    "\j[]"
+}
+OnHowToGuestPersonality {
+    "\j[]"
+}
+OnHowToPersonality {
+    "\j[]"
+}
+
+
+
+
+
+
+

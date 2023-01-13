@@ -1,0 +1,113 @@
+
+OnPluginLoad.Weather {
+}
+OnPluginUnload.Weather {
+}
+
+
+WeatherMenu {
+    "【 天気 】\n/
+    地域設定 : %( WeatherLocation )\n/
+	\_a[OnSetWeatherPrefecture]地域を指定する。\_a : \_a[OnClearWeatherTime]地域を削除する。\_a\n/
+	"
+}
+
+
+//天気を取得する
+GetWeather {
+    if ( ISVAR( "WeatherLocationNum" ) != 0 ){
+        FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
+        _weatherText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getWeather.exe" , WeatherLocationNum ) 
+        _weatherText
+
+    } else {
+        "ん～ 地域が設定されてないかな。"
+    }
+}
+
+
+
+OnClearWeatherTime {
+    ERASEVAR( 'WeatherLocation' )
+    ERASEVAR( 'WeatherLocationNum' )
+    "解除したよ。"
+}
+
+
+//住んでいる地域を都道府県コード4桁で設定する。
+OnSetWeatherPrefecture {
+    "\_q\b[2]\__a/
+    \n[half]/
+	\_a[OnSetUserLocation,010000,北海道]北海道\_a\n/
+	\_a[OnSetUserLocation,020000,青森県]青森県\_a\n/
+	\_a[OnSetUserLocation,030000,岩手県]岩手県\_a\n/
+	\_a[OnSetUserLocation,040000,宮城県]宮城県\_a\n/
+	\_a[OnSetUserLocation,050000,秋田県]秋田県\_a\n/
+	\_a[OnSetUserLocation,060000,山形県]山形県\_a\n/
+	\_a[OnSetUserLocation,070000,福島県]福島県\_a\n/
+	\_a[OnSetUserLocation,080000,茨城県]茨城県\_a\n/
+	\_a[OnSetUserLocation,090000,栃木県]栃木県\_a\n/
+	\_a[OnSetUserLocation,100000,群馬県]群馬県\_a\n/
+	\_a[OnSetUserLocation,110000,埼玉県]埼玉県\_a\n/
+	\_a[OnSetUserLocation,120000,千葉県]千葉県\_a\n/
+	\_a[OnSetUserLocation,130000,東京都]東京都\_a\n/
+    \_a[OnSetUserLocation,140000,神奈川県]神奈川県\_a\n/
+	\_a[OnSetUserLocation,150000,新潟県]新潟県\_a\n/
+	\_a[OnSetUserLocation,160000,富山県]富山県\_a\n/
+	\_a[OnSetUserLocation,170000,石川県]石川県\_a\n/
+	\_a[OnSetUserLocation,180000,福井県]福井県\_a\n/
+	\_a[OnSetUserLocation,190000,山梨県]山梨県\_a\n/
+	\_a[OnSetUserLocation,200000,長野県]長野県\_a\n/
+	\_a[OnSetUserLocation,210000,岐阜県]岐阜県\_a\n/
+	\_a[OnSetUserLocation,220000,静岡県]静岡県\_a\n/
+	\_a[OnSetUserLocation,230000,愛知県]愛知県\_a\n/
+	\_a[OnSetUserLocation,240000,三重県]三重県\_a\n/
+	\_a[OnSetUserLocation,250000,滋賀県]滋賀県\_a\n/
+	\_a[OnSetUserLocation,260000,京都府]京都府\_a\n/
+	\_a[OnSetUserLocation,270000,大阪府]大阪府\_a\n/
+	\_a[OnSetUserLocation,280000,兵庫県]兵庫県\_a\n/
+	\_a[OnSetUserLocation,290000,奈良県]奈良県\_a\n/
+    \_a[OnSetUserLocation,300000,和歌山県]和歌山県\_a\n/
+	\_a[OnSetUserLocation,310000,鳥取県]鳥取県\_a\n/
+	\_a[OnSetUserLocation,320000,島根県]島根県\_a\n/
+	\_a[OnSetUserLocation,330000,岡山県]岡山県\_a\n/
+	\_a[OnSetUserLocation,340000,広島県]広島県\_a\n/
+	\_a[OnSetUserLocation,350000,山口県]山口県\_a\n/
+	\_a[OnSetUserLocation,360000,徳島県]徳島県\_a\n/
+	\_a[OnSetUserLocation,370000,香川県]香川県\_a\n/
+	\_a[OnSetUserLocation,380000,愛媛県]愛媛県\_a\n/
+	\_a[OnSetUserLocation,390000,高知県]高知県\_a\n/
+	\_a[OnSetUserLocation,400000,福岡県]福岡県\_a\n/
+	\_a[OnSetUserLocation,410000,佐賀県]佐賀県\_a\n/
+	\_a[OnSetUserLocation,420000,長崎県]長崎県\_a\n/
+	\_a[OnSetUserLocation,430000,熊本県]熊本県\_a\n/
+	\_a[OnSetUserLocation,440000,大分県]大分県\_a\n/
+	\_a[OnSetUserLocation,450000,宮崎県]宮崎県\_a\n/
+    \_a[OnSetUserLocation,460100,鹿児島県]鹿児島県\_a\n/
+	\_a[OnSetUserLocation,471000,沖縄県]沖縄県\_a\n/
+    \_a[OnSetOtherUserLocation,その他]その他\_a\n/
+	\n[half]\_q"
+}
+
+OnSetOtherUserLocation {
+    "\_q気象台の番号を入力してください。わからなければReadMeに記載されているリンクを確認してください。\![open,inputbox,OnSetUserLocation]\_q"
+}
+
+
+OnSetUserLocation {
+    WeatherLocationNum = reference[0]
+    WeatherLocation = reference[1]
+    if ( WeatherLocation == "" ) {
+        WeatherLocation = "その他" 
+    }
+    "地域 : %( WeatherLocation ) / %( WeatherLocationNum ) が設定されたよ。"
+}
+
+
+
+
+
+
+
+
+

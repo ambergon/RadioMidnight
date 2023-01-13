@@ -1,0 +1,83 @@
+
+//お便り送信関数群
+OnMakeHagaki {
+    Person  = reference[0]
+    Url     = reference[1]
+    if ( RadioName == "") {
+        RN = "Guest"
+    } else {
+        RN = RadioName
+    }
+    "\_qラジオパーソナリティに葉書を送信します。\n貴方のラジオネーム : %(RN) \n一部の記号は置換されます。\![open,inputbox,OnSendHagaki]\_q"
+}
+OnSendHagaki {
+    _SendText   = reference[0]
+
+    _SendText  = REPLACE( _SendText , "'" , "" )
+    _SendText  = REPLACE( _SendText , '"' , "" )
+
+    _SendText  = REPLACE( _SendText , '\' , "" )
+    _SendText  = REPLACE( _SendText , '|' , "" )
+    _SendText  = REPLACE( _SendText , "?" , "？" )
+    _SendText  = REPLACE( _SendText , "[" , "" )
+    _SendText  = REPLACE( _SendText , "]" , "" )
+    //%変数名でそのまま呼び出せてしまう。
+    _SendText  = REPLACE( _SendText , "%" , "" )
+    _SendText  = REPLACE( _SendText , "#" , "" )
+    _SendText  = REPLACE( _SendText , "{" , "" )
+    _SendText  = REPLACE( _SendText , "}" , "" )
+    _SendText  = REPLACE( _SendText , "(" , "" )
+    _SendText  = REPLACE( _SendText , ")" , "" )
+
+    //サニタイズ
+    _SendText  = REPLACE( _SendText , ";" , "" )
+    _SendText  = REPLACE( _SendText , "," , "" )
+
+    //GAS側で、スペースが+に置き換わってしまうので適当に使いやすく。
+    _SendText  = REPLACE( _SendText , "　" , " " )
+    _SendText  = REPLACE( _SendText , " " , "_" )
+
+    //罵倒処理
+    _SendText  = CheckWord( _SendText ) 
+
+    //空送信・空白送信除去
+    _CheckText  = REPLACE( _SendText , " " , "" )
+    _CheckText  = REPLACE( _CheckText , "　" , "" )
+
+    if ( _CheckText != "" ) {
+
+        //引数の数が合っていないと使えないようだ。
+        "\![execute,http-POST,%(Url),--param=message_body=%(BootCheck);%(RN);%(_SendText),--async=OnWebClapModoki,--timeout=5]"
+        RN       = ""
+        Person   = ""
+        Url      = ""
+    }
+}
+
+
+//罵倒処理
+//下手に登録するとゴースト名に干渉しうるのが問題だ。
+CheckWord {
+    //Fword checker
+    _word   = _argv[0]
+    _word   = REPLACE( _word , "" , "" )
+    _word   = REPLACE( _word , "Fuck You" , "" )
+    _word   = REPLACE( _word , "fuch you" , "" )
+    _word   = REPLACE( _word , "FuckYou" , "" )
+    _word   = REPLACE( _word , "fuckyou" , "" )
+    _word   = REPLACE( _word , "死ね" , "" )
+    _word   = REPLACE( _word , "きもい" , "" )
+    _word
+}
+
+//宛先がなかった場合に「葉書を送る」を表示しないように。
+ExistHagakiUrl {
+    _Url    = _argv[0]
+    if ( _Url == "" ) {
+        ""
+    } else {
+        "葉書を送る。"
+    }
+}
+
+
