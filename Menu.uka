@@ -269,6 +269,8 @@ TalkRadioText {
 
         _talk            =  _SoundBefore + _text + "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _weatherText + "\0" + _SoundAfter + "\e"
         _talk
+        
+        res_marker = '【RadioMidnightのお時間】'
     } else {
         MainContents()
     }
