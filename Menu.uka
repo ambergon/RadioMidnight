@@ -1,8 +1,10 @@
 
 
 
-Music.Path          { "music/晴れの日の私.wav"  }
-//Music.Delay         { "0"                   }
+Music.Path          {
+    _path = PluginDirectory + "music/晴れの日の私.wav"
+    _path
+}
 Music.Delay         { "28000"                   }
 
 
@@ -21,10 +23,13 @@ Sun.Person          { "" }
 
 OnPluginLoad.Menu {
     if ( RadioName == "" ) { RadioName = "Guest" }
-    ReadMeTexts = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
+    ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
+    _file = Music.Path()
+    StopMusicText   = "【BGMの停止】\n\_a[OnStopMusic,%(_file)]途中でゴーストのトークなどが発声した場合。\_a\n"
 }
 OnPluginUnload.Menu {
     ERASEVAR( "ReadMeTexts" )
+    ERASEVAR( "StopMusicText" )
     ERASEVAR( "RadioTextDraft" )
 }
 
@@ -43,6 +48,7 @@ MainContents {
     %( SaveClickContent     )\n/
     %( GuestPersonality     )\n/
     %( ReadMeTexts          )\n/
+    %( StopMusicText        )\n/
 	\n[half]\_q\x[noclear]\e"
 }
 
@@ -257,9 +263,12 @@ TalkRadioText {
         _Option.RegistClose         = "\![enter,nouserbreakmode]"
         _Option.RegistClose.END     = "\![leave,nouserbreakmode]"
 
-        //他のイベント通知で割り込まれたりしないように。
-        _Option.RegistInterrupt      = "\t"
-        _Option.RegistInterrupt.END  = ""
+        ////他のイベント通知で割り込まれたりしないように。
+        //ghostを優先したいので切る。
+        //問題は、musicのstopが発声せずにループが起きる。
+        //otherghosttalkで検知するか。
+        //_Option.RegistInterrupt      = "\t"
+        //_Option.RegistInterrupt.END  = ""
 
         _Options        = _Option.RegistClose       + _Option.RegistInterrupt
         _Options.END    = _Option.RegistClose.END   + _Option.RegistInterrupt.End

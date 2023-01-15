@@ -19,7 +19,10 @@ SoundStop {
         _fadeOutText = "\_w[50]\![sound,option,%( _file ),--volume=%(_i)]" 
         _fadeOut = _fadeOut + _fadeOutText 
     } 
-    _fadeOut = _fadeOut + "\![sound,stop]" 
+    _fadeOut = _fadeOut + "\![sound,stop,%( _file )]" 
     _fadeOut 
 } 
+OnStopMusic {
+    SoundStop( reference[0] )
+}
 

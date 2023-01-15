@@ -31,6 +31,8 @@ OnPluginUnload.Self {
 }
 
 
+
+
 OnSecondChange {
     if ( TOSTR( hour ) == "0"  && TOSTR( minute ) == "30" ) {
         //"ラジオ開始。"
