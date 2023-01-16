@@ -12,6 +12,7 @@ dic,Sound.uka
 dic,ReadME.uka
 dic,Weather.uka
 dic,Hagaki.uka
+dic,UserConfig.uka
 
 iolog, off
 //log,LogFileName.log	

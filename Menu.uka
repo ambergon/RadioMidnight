@@ -1,43 +1,25 @@
 
 
 
-Music.Path          {
-    _path = PluginDirectory + "music/晴れの日の私.wav"
-    _path
-}
-Music.Delay         { "28000"                   }
-
-
-
-Mon.Person          { "" }
-Tues.Person         { "" }
-Wednes.Person       { "安馬" }
-Wednes.HomePage     { "https://twitter.com/Sc_lFoxGon" }
-Wednes.Hagaki       { "https://script.google.com/macros/s/AKfycbwJrOy4PSA6Yfeo-vStWhOnhU39CdAN6NiYCVee3sIs-p-4MtNwviYdMyuEd3bXZfCebQ/exec"}
-Wednes.Url          { "https://raw.githubusercontent.com/ambergon/RadioText/master/ReadMe.txaat"}
-Thurs.Person        { "" }
-Fri.Person          { "" }
-Satur.Person        { "" }
-Sun.Person          { "" }
 
 
 OnPluginLoad.Menu {
     if ( RadioName == "" ) { RadioName = "Guest" }
     ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
-    _file = Music.Path()
-    StopMusicText   = "【BGMの停止】\n\_a[OnStopMusic,%(_file)]途中でゴーストのトークなどが発声した場合。\_a\n"
 }
 OnPluginUnload.Menu {
     ERASEVAR( "ReadMeTexts" )
-    ERASEVAR( "StopMusicText" )
     ERASEVAR( "RadioTextDraft" )
 }
 
 
 OnMenuExec {
+
+    res_script_option = "notranslate"
     MainContents()
     //WeekRadio()
 }
+
 
 
 MainContents {
@@ -48,7 +30,7 @@ MainContents {
     %( SaveClickContent     )\n/
     %( GuestPersonality     )\n/
     %( ReadMeTexts          )\n/
-    %( StopMusicText        )\n/
+    %( BGMtext              )\n/
 	\n[half]\_q\x[noclear]\e"
 }
 
@@ -118,15 +100,91 @@ OnContribution {
 
 
 RadioBoard {
+
+    //hagaki
+    _Mon.HagakiLink   ="\_a[OnMakeHagaki,%( Mon.Person   ),%( Mon.Hagaki    )]"+ ExistHagakiUrl( Mon.Hagaki   ) +"\_a\n"
+    _Tues.HagakiLink  ="\_a[OnMakeHagaki,%( Tues.Person  ),%( Tues.Hagaki   )]"+ ExistHagakiUrl( Tues.Hagaki  ) +"\_a\n"
+    _Wednes.HagakiLink="\_a[OnMakeHagaki,%( Wednes.Person),%( Wednes.Hagaki )]"+ ExistHagakiUrl( Wednes.Hagaki) +"\_a\n"
+    _Thurs.HagakiLink ="\_a[OnMakeHagaki,%( Thurs.Person ),%( Thurs.Hagaki  )]"+ ExistHagakiUrl( Thurs.Hagaki ) +"\_a\n"
+    _Fri.HagakiLink   ="\_a[OnMakeHagaki,%( Fri.Person   ),%( Fir.Hagaki    )]"+ ExistHagakiUrl( Fir.Hagaki   ) +"\_a\n"
+    _Satur.HagakiLink ="\_a[OnMakeHagaki,%( Satur.Person ),%( Satur.Hagaki  )]"+ ExistHagakiUrl( Satur.Hagaki ) +"\_a\n"
+    _Sun.HagakiLink   ="\_a[OnMakeHagaki,%( Sun.Person   ),%( Sun.Hagaki    )]"+ ExistHagakiUrl( Sun.Hagaki   ) +"\_a\n"
+
+    //atagにして時間変更できるように。
+    _Sun.Schedule   =" \_a[OnChangeOnAir,0]" +TOSTR(    Sun.HOUR ) + ":" + TOSTR( Sun.MINUTES    ) + "\_a ～ " 
+    _Mon.Schedule   =" \_a[OnChangeOnAir,1]" +TOSTR(    Mon.HOUR ) + ":" + TOSTR( Mon.MINUTES    ) + "\_a ～ "
+    _Tues.Schedule  =" \_a[OnChangeOnAir,2]" +TOSTR(   Tues.HOUR ) + ":" + TOSTR( Tues.MINUTES   ) + "\_a ～ "
+    _Wednes.Schedule=" \_a[OnChangeOnAir,3]" +TOSTR( Wednes.HOUR ) + ":" + TOSTR( Wednes.MINUTES ) + "\_a ～ "
+    _Thurs.Schedule =" \_a[OnChangeOnAir,4]" +TOSTR(  Thurs.HOUR ) + ":" + TOSTR( Thurs.MINUTES  ) + "\_a ～ "
+    _Fri.Schedule   =" \_a[OnChangeOnAir,5]" +TOSTR(    Fri.HOUR ) + ":" + TOSTR( Fri.MINUTES    ) + "\_a ～ "
+    _Satur.Schedule =" \_a[OnChangeOnAir,6]" +TOSTR(  Satur.HOUR ) + ":" + TOSTR( Satur.MINUTES  ) + "\_a ～ "
+
 	"【放送予定】\n/
-	月曜日 : 深夜 0:30～ "+ ExistHomePage( Mon.Person   ,Mon.HomePage   ) + Space(Mon.Person)    +"\_a[OnMakeHagaki,%( Mon.Person    ),%( Mon.Hagaki    )]"+ ExistHagakiUrl( Mon.Hagaki   ) +"\_a\n/
-	火曜日 : 深夜 0:30～ "+ ExistHomePage( Tues.Person  ,Tues.HomePage  ) + Space(Tues.Person)   +"\_a[OnMakeHagaki,%( Tues.Person   ),%( Tues.Hagaki   )]"+ ExistHagakiUrl( Tues.Hagaki  ) +"\_a\n/
-	水曜日 : 深夜 0:30～ "+ ExistHomePage( Wednes.Person,Wednes.HomePage) + Space(Wednes.Person) +"\_a[OnMakeHagaki,%( Wednes.Person ),%( Wednes.Hagaki )]"+ ExistHagakiUrl( Wednes.Hagaki ) +"\_a\n/
-	木曜日 : 深夜 0:30～ "+ ExistHomePage( Thurs.Person ,Thurs.HomePage ) + Space(Thurs.Person)  +"\_a[OnMakeHagaki,%( Thurs.Person  ),%( Thurs.Hagaki  )]"+ ExistHagakiUrl( Thurs.Hagaki ) +"\_a\n/
-	金曜日 : 深夜 0:30～ "+ ExistHomePage( Fri.Person   ,Fri.HomePage   ) + Space(Fri.Person)    +"\_a[OnMakeHagaki,%( Fri.Person    ),%( Fir.Hagaki    )]"+ ExistHagakiUrl( Fir.Hagaki   ) +"\_a\n/
-	土曜日 : 深夜 0:30～ "+ ExistHomePage( Satur.Person ,Satur.HomePage ) + Space(Satur.Person)  +"\_a[OnMakeHagaki,%( Satur.Person  ),%( Satur.Hagaki  )]"+ ExistHagakiUrl( Satur.Hagaki ) +"\_a\n/
-	日曜日 : 深夜 0:30～ "+ ExistHomePage( Sun.Person   ,Sun.HomePage   ) + Space(Sun.Person)    +"\_a[OnMakeHagaki,%( Sun.Person    ),%( Sun.Hagaki    )]"+ ExistHagakiUrl( Sun.Hagaki   ) +"\_a\n/
+	日曜日 :"+_Sun.Schedule   +ExistHomePage( Sun.Person   ,Sun.HomePage   )+Space(Sun.Person)   +   _Sun.HagakiLink+"/
+	月曜日 :"+_Mon.Schedule   +ExistHomePage( Mon.Person   ,Mon.HomePage   )+Space(Mon.Person)   +   _Mon.HagakiLink+"/
+	火曜日 :"+_Tues.Schedule  +ExistHomePage( Tues.Person  ,Tues.HomePage  )+Space(Tues.Person)  +  _Tues.HagakiLink+"/
+	水曜日 :"+_Wednes.Schedule+ExistHomePage( Wednes.Person,Wednes.HomePage)+Space(Wednes.Person)+_Wednes.HagakiLink+"/
+	木曜日 :"+_Thurs.Schedule +ExistHomePage( Thurs.Person ,Thurs.HomePage )+Space(Thurs.Person) + _Thurs.HagakiLink+"/
+	金曜日 :"+_Fri.Schedule   +ExistHomePage( Fri.Person   ,Fri.HomePage   )+Space(Fri.Person)   +   _Fri.HagakiLink+"/
+	土曜日 :"+_Satur.Schedule +ExistHomePage( Satur.Person ,Satur.HomePage )+Space(Satur.Person) + _Satur.HagakiLink+"/
     "
+}
+
+
+
+//設定されている時間を変更したい。
+//ダイアログを出して時間と分を指定できるようにする必要がある。
+OnChangeOnAir {
+    SetWeek       =     reference[0]
+    "4桁の半角数字で時間を入力してね。\n【例】2230 -> 22時30分\![open,inputbox,OnInputTimeSchedule]"
+}
+
+//直接evalに流すのはよくない。
+//四桁数字を受け取って二桁に分割する。
+OnInputTimeSchedule {
+    _time       = TOSTR( reference[0] )
+    _CheckWeek  = SetWeek
+    ERASEVAR( "SetWeek" )
+
+    //_time = TOSTR( "1234" )
+    if RE_MATCH( _time , '[0-9]...' ) {
+
+        _hour   = SUBSTR( _time , 0 , 2)
+        _min    = SUBSTR( _time , 2 , 2)
+
+        if ( _hour >= 24 || _min >= 60 ) {
+            "ちょっと数字が大きいかな。"
+
+        } else {
+            _week = ""
+            if _CheckWeek == 0 {
+                _week = "Sun"
+
+            } elseif _CheckWeek == 1 {
+                _week = "Mon"
+
+            } elseif _CheckWeek == 2 {
+                _week = "Tues"
+
+            } elseif _CheckWeek == 3 {
+                _week = "Wednes"
+
+            } elseif _CheckWeek == 4 {
+                _week = "Thurs"
+
+            } elseif _CheckWeek == 5 {
+                _week = "Fri"
+
+            } else {
+                _week = "Satur"
+            }
+            EVAL( "%(_week).HOUR      =   _hour" )
+            EVAL( "%(_week).MINUTES   =   _min" )
+            "%( _hour )時%( _min )分に設定したよ。"
+        }
+    } else {
+        "設定できなかったよ。"
+    }
 }
 
 
@@ -156,10 +214,6 @@ OnOpenHomePage {
 }
 
 
-
-
-
-
 UserData {
 	"【あなたの情報】\n/
     貴方のラジオネーム : %(RadioName)\n/
@@ -167,7 +221,7 @@ UserData {
 }
 SaveClickContent {
     _OldLinkText = ""
-    if ( alink_URL != "" ) { _OldLinkText = "【取得項目】\n\n\_a[OnOpenLinkDialog]%(alink_TITLE)\_a\n" }
+    if ( alink_URL != "" ) { _OldLinkText = "【取得項目】\n\_a[OnOpenLinkDialog]%(alink_TITLE)\_a\n" }
     _OldLinkText
 }
 
@@ -244,6 +298,7 @@ CheckRadioText {
 }
 
 
+
 TalkRadioText {
     _text       = _argv[0]
 
@@ -256,8 +311,7 @@ TalkRadioText {
 
     if ( _CheckText != "" ) {
         _weatherText = GetWeather()
-        _fileBGM     = Music.Path
-        _Delay       = Music.Delay
+        //_fileBGM     = Music.Path
 
         //クリック等バルーンを消せないように。
         _Option.RegistClose         = "\![enter,nouserbreakmode]"
@@ -270,21 +324,25 @@ TalkRadioText {
         //_Option.RegistInterrupt      = "\t"
         //_Option.RegistInterrupt.END  = ""
 
-        _Options        = _Option.RegistClose       + _Option.RegistInterrupt
-        _Options.END    = _Option.RegistClose.END   + _Option.RegistInterrupt.End
+        _Options        = _Option.RegistClose     
+        _Options.END    = _Option.RegistClose.END 
 
-        _SoundBefore    = _Options      + "\b[-1]" + SoundStart( _fileBGM ) + "\_w[ %( _Delay ) ]\b[2]"
-        _SoundAfter     = "\_w[ %( _Delay ) ]" + SoundStop(  _fileBGM ) + _Options.END
+        _SoundBefore    = _Options      + "\b[-1]" + SoundStart() + "\b[2]"
+        _SoundAfter     = SoundStop() + _Options.END
 
         _talk            =  _SoundBefore + _text + "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _weatherText + "\0" + _SoundAfter + "\e"
         _talk
         
         res_marker = '【RadioMidnightのお時間】'
+        //表示途中のバルーンを食わないように。
+        //選択肢待機とかは食ってしまうので完ぺきではない。
+        //"\![get,property,OnAAA,currentghost.status]"
+        //を試してみたが、このスクリプトを呼ぶこと自体が実行中になってしまい、常にtalking
+        res_script_option = "nobreak,notranslate"
     } else {
         MainContents()
     }
 }
-
 
 
 

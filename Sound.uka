@@ -1,28 +1,97 @@
 
+OnPluginLoad.Sound {
+    if ( Sound.Max == "" ) {
+        Sound.Max == "50"
+    }
+
+    _file = Music.Path()
+    BGMtext   = "【BGM 音量 : %(Sound.Max)】\n/
+        \_a[OnMusicVolume,%(_file)]音量調節\_a\n/
+        \_a[OnStopMusic]BGMの停止\_a\n/
+        "
+}
+OnPluginUnload.Sound {
+    ERASEVAR( "BGMtext" )
+}
+
+Music.Path          {
+    _path = PluginDirectory + "music/晴れの日の私.wav"
+    _path
+}
+Music.Delay         { "28000"                   }
+
+
 SoundStart { 
-    _file = _argv[0] 
+    _file   = Music.Path
+    _Delay  = Music.Delay
+    //_file = _argv[0] 
 
     //フェードイン 
     _fadeIn = "\![sound,loop,%( _file ),--volume=0]" 
-    for _i = 0 ; _i < 100 ; _i++ ; { 
+    for _i = 0 ; _i < TOINT(Sound.Max) ; _i++ ; { 
+    //for _i = 0 ; _i < 100 ; _i++ ; { 
         _fadeInText = "\_w[50]\![sound,option,%( _file ),--volume=%(_i)]" 
         _fadeIn = _fadeIn + _fadeInText 
     } 
-    _fadeIn 
+    _fadeIn = _fadeIn + "\_w[ %( _Delay ) ]"
+    _fadeIn
 } 
 SoundStop { 
-    _file = _argv[0] 
+    _file   = Music.Path
+    //_Delay  = Music.Delay
+    //_file = _argv[0] 
 
     //フェードアウト 
     _fadeOut = "" 
-    for _i = 100 ; _i > O ; _i = _i - 1 ; { 
+    for _i = TOINT(Sound.Max) ; _i > O ; _i = _i - 1 ; { 
+    //for _i = 100 ; _i > O ; _i = _i - 1 ; { 
         _fadeOutText = "\_w[50]\![sound,option,%( _file ),--volume=%(_i)]" 
         _fadeOut = _fadeOut + _fadeOutText 
     } 
     _fadeOut = _fadeOut + "\![sound,stop,%( _file )]" 
+    //_fadeOut = "\_w[ %( _Delay ) ]" + _fadeOut 
     _fadeOut 
+
 } 
+
+
 OnStopMusic {
-    SoundStop( reference[0] )
+    SoundStop()
 }
+OnMusicVolume {
+    "入力範囲 00-99\n2桁の半角数字で時間を入力してね。\n【例】00 -> 音量0\![open,inputbox,OnInputVolume]"
+}
+OnInputVolume {
+    _Volume       = TOSTR( reference[0] )
+    if RE_MATCH( _Volume , '[0-9].' ) {
+        Sound.Max = _Volume
+        "%( Sound.Max )に設定したよ。"
+    } else {
+        "設定できなかったよ。"
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

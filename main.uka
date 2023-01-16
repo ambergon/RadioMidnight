@@ -25,15 +25,42 @@ OnPluginLoad.Self {
     if ( GuestTalkCount == "" ) {
         GuestTalkCount = "0"
     }
+
+    TalkWaitCount = 0
+
+    //初期化
+    if ( TOSTR( Sun.HOUR        ) == "" ){ Sun.HOUR       = "88" }   
+    if ( TOSTR( Mon.HOUR        ) == "" ){ Mon.HOUR       = "88" }
+    if ( TOSTR( Tues.HOUR       ) == "" ){ Tues.HOUR      = "88" }
+    if ( TOSTR( Wednes.HOUR     ) == "" ){ Wednes.HOUR    = "88" }
+    if ( TOSTR( Thurs.HOUR      ) == "" ){ Thurs.HOUR     = "88" }
+    if ( TOSTR( Fri.HOUR        ) == "" ){ Fri.HOUR       = "88" }
+    if ( TOSTR( Satur.HOUR      ) == "" ){ Satur.HOUR     = "88" }
+
+    if ( TOSTR( Sun.MINUTES     ) == "" ){ Sun.MINUTES    = "88" }
+    if ( TOSTR( Mon.MINUTES     ) == "" ){ Mon.MINUTES    = "88" }
+    if ( TOSTR( Tues.MINUTES    ) == "" ){ Tues.MINUTES   = "88" }
+    if ( TOSTR( Wednes.MINUTES  ) == "" ){ Wednes.MINUTES = "88" }
+    if ( TOSTR( Thurs.MINUTES   ) == "" ){ Thurs.MINUTES  = "88" }
+    if ( TOSTR( Fri.MINUTES     ) == "" ){ Fri.MINUTES    = "88" }
+    if ( TOSTR( Satur.MINUTES   ) == "" ){ Satur.MINUTES  = "88" }
 }
 
 OnPluginUnload.Self {
+    ERASEVAR( "TalkWaitCount" )
 }
 
 
 
 
+//現在の曜日ごとに指定した時間を確認して、hour minuteが等しければ実行せずにtrue
+//OnOtherGhostTalkで引っかかったら30秒の大気を入れておくか。表示後5秒程度の猶予を与えよう。
+//条件があった場合にTrueにして、ラジオ放送開始でFalseに戻せばいいか。
 OnSecondChange {
+    //if  0
+    TalkWaitCount = TalkWaitCount - 1
+
+
     if ( TOSTR( hour ) == "0"  && TOSTR( minute ) == "30" ) {
         //"ラジオ開始。"
         WeekRadio()
@@ -41,79 +68,62 @@ OnSecondChange {
 }
 
 
-//今回のプラグインではEVALは使わないように。
+//aタグqタグなどの選択肢が出ていた場合止めたい。
+//nobreakだけでは表示中の抑制しかできない。
+//check text
+OnOtherGhostTalk {
+    TalkWaitCount = 0
+    _TalkText = reference[4]
+    if ( RE_SEARCH( _TalkText , "\\q") || RE_SEARCH( _TalkText , "\\_a") ) {
+        TalkWaitCount = 30
+    }
+}
+
+
+//Sun.Anko = "anko x"
+//now = "Sun"
+//EVAL( "x = %(now).Anko")
+//x
+
+
+
 WeekRadio {
+
     FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
+    _week = ""
     if weekday == 0 {
-        //"Sun"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Sun.Url ) 
-        //前回とおんなじもしくは空の場合
-        if ( Sun.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Sun.OldText = _HtmlText
-        }
+        _week = "Sun"
 
     } elseif weekday == 1 {
-        //"Mon"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Mon.Url )
-        if ( Mon.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Mon.OldText = _HtmlText
-        }
+        _week = "Mon"
 
     } elseif weekday == 2 {
-        //"Tues"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Tues.Url )
-        if ( Tues.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Tues.OldText = _HtmlText
-        }
+        _week = "Tues"
 
     } elseif weekday == 3 {
-        //"Wednes"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Wednes.Url ) 
-        if ( Wednes.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Wednes.OldText = _HtmlText
-        }
+        _week = "Wednes"
 
     } elseif weekday == 4 {
-        //"Thurs"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Thurs.Url )
-        if ( Thurs.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Thurs.OldText = _HtmlText
-        }
+        _week = "Thurs"
 
     } elseif weekday == 5 {
-        //"Fri"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Fri.Url )
-        if ( Fri.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Fri.OldText = _HtmlText
-        }
+        _week = "Fri"
 
     } else {
-        //"Satur"
-        _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , Satur.Url )
-        if ( Satur.OldText == _HtmlText || _HtmlText == "" ) {
-            TalkGuestPersonality()
-        } else {
-            TalkRadioText( _HtmlText )
-            Satur.OldText = _HtmlText
-        }
+        _week = "Satur"
+    }
+
+    EVAL( "_url = %(_week).Url" )
+    EVAL( "_old = %(_week).OldText" )
+
+    _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
+
+    //前回とおんなじもしくは空の場合
+    if ( _old == _HtmlText || _HtmlText == "" ) {
+        TalkGuestPersonality()
+    } else {
+        TalkRadioText( _HtmlText )
+        EVAL( "%(_week).OldText = _HtmlText" )
     }
 }
 
@@ -123,9 +133,8 @@ WeekRadio {
 //しかし同じものが二回表示されるのもおかしな話。
 //処理の軽そうな方法を考えなくては。
 TalkGuestPersonality  {
-    _GuestTalk[0] = "aa"
-    _GuestTalk[1] = "bb"
-    _GuestTalk[2] = "cc"
+    _GuestTalk[0] = "SampleGuestTalk1"
+    _GuestTalk[1] = "SampleGuestTalk2"
 
     if ( _GuestTalk[GuestTalkCount] != "" ) {
         TalkRadioText( _GuestTalk[_count] )
