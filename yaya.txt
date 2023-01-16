@@ -6,13 +6,14 @@ charset.extension, UTF-8
 
 dicdir,System_yaya
 
-dic,main.uka
+dic,Main.uka
 dic,Menu.uka
 dic,Sound.uka
 dic,ReadME.uka
 dic,Weather.uka
 dic,Hagaki.uka
 dic,UserConfig.uka
+dic,GuestPersonality.uka
 
 iolog, off
 //log,LogFileName.log	

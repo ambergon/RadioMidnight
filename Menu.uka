@@ -6,6 +6,23 @@
 OnPluginLoad.Menu {
     if ( RadioName == "" ) { RadioName = "Guest" }
     ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
+
+    //初期化
+    if ( TOSTR( Sun.HOUR        ) == "" ){ Sun.HOUR       = "88" }   
+    if ( TOSTR( Mon.HOUR        ) == "" ){ Mon.HOUR       = "88" }
+    if ( TOSTR( Tues.HOUR       ) == "" ){ Tues.HOUR      = "88" }
+    if ( TOSTR( Wednes.HOUR     ) == "" ){ Wednes.HOUR    = "88" }
+    if ( TOSTR( Thurs.HOUR      ) == "" ){ Thurs.HOUR     = "88" }
+    if ( TOSTR( Fri.HOUR        ) == "" ){ Fri.HOUR       = "88" }
+    if ( TOSTR( Satur.HOUR      ) == "" ){ Satur.HOUR     = "88" }
+
+    if ( TOSTR( Sun.MINUTES     ) == "" ){ Sun.MINUTES    = "88" }
+    if ( TOSTR( Mon.MINUTES     ) == "" ){ Mon.MINUTES    = "88" }
+    if ( TOSTR( Tues.MINUTES    ) == "" ){ Tues.MINUTES   = "88" }
+    if ( TOSTR( Wednes.MINUTES  ) == "" ){ Wednes.MINUTES = "88" }
+    if ( TOSTR( Thurs.MINUTES   ) == "" ){ Thurs.MINUTES  = "88" }
+    if ( TOSTR( Fri.MINUTES     ) == "" ){ Fri.MINUTES    = "88" }
+    if ( TOSTR( Satur.MINUTES   ) == "" ){ Satur.MINUTES  = "88" }
 }
 OnPluginUnload.Menu {
     ERASEVAR( "ReadMeTexts" )

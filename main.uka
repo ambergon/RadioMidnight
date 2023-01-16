@@ -1,4 +1,3 @@
-
 //起動時アップデートだとつけっぱなしで死ぬ。
 //作業の途中でもつい手を止めちゃうような。
 //## 自動アップデート機能が欲しい。
@@ -22,28 +21,7 @@ OnPluginLoad.Self {
     if ( BootCheck == "" ) {
         BootCheck = TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))
     }
-    if ( GuestTalkCount == "" ) {
-        GuestTalkCount = "0"
-    }
-
     TalkWaitCount = 0
-
-    //初期化
-    if ( TOSTR( Sun.HOUR        ) == "" ){ Sun.HOUR       = "88" }   
-    if ( TOSTR( Mon.HOUR        ) == "" ){ Mon.HOUR       = "88" }
-    if ( TOSTR( Tues.HOUR       ) == "" ){ Tues.HOUR      = "88" }
-    if ( TOSTR( Wednes.HOUR     ) == "" ){ Wednes.HOUR    = "88" }
-    if ( TOSTR( Thurs.HOUR      ) == "" ){ Thurs.HOUR     = "88" }
-    if ( TOSTR( Fri.HOUR        ) == "" ){ Fri.HOUR       = "88" }
-    if ( TOSTR( Satur.HOUR      ) == "" ){ Satur.HOUR     = "88" }
-
-    if ( TOSTR( Sun.MINUTES     ) == "" ){ Sun.MINUTES    = "88" }
-    if ( TOSTR( Mon.MINUTES     ) == "" ){ Mon.MINUTES    = "88" }
-    if ( TOSTR( Tues.MINUTES    ) == "" ){ Tues.MINUTES   = "88" }
-    if ( TOSTR( Wednes.MINUTES  ) == "" ){ Wednes.MINUTES = "88" }
-    if ( TOSTR( Thurs.MINUTES   ) == "" ){ Thurs.MINUTES  = "88" }
-    if ( TOSTR( Fri.MINUTES     ) == "" ){ Fri.MINUTES    = "88" }
-    if ( TOSTR( Satur.MINUTES   ) == "" ){ Satur.MINUTES  = "88" }
 }
 
 OnPluginUnload.Self {
@@ -59,7 +37,6 @@ OnPluginUnload.Self {
 OnSecondChange {
     //if  0
     TalkWaitCount = TalkWaitCount - 1
-
 
     if ( TOSTR( hour ) == "0"  && TOSTR( minute ) == "30" ) {
         //"ラジオ開始。"
@@ -78,13 +55,6 @@ OnOtherGhostTalk {
         TalkWaitCount = 30
     }
 }
-
-
-//Sun.Anko = "anko x"
-//now = "Sun"
-//EVAL( "x = %(now).Anko")
-//x
-
 
 
 WeekRadio {
@@ -117,32 +87,17 @@ WeekRadio {
     EVAL( "_old = %(_week).OldText" )
 
     _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
-
-    //前回とおんなじもしくは空の場合
-    if ( _old == _HtmlText || _HtmlText == "" ) {
-        TalkGuestPersonality()
-    } else {
+    if ( _old != _HtmlText || _HtmlText != "" ) {
         TalkRadioText( _HtmlText )
         EVAL( "%(_week).OldText = _HtmlText" )
-    }
-}
 
-
-//無かった時の担当。
-//カウントを組んで実行したいね。
-//しかし同じものが二回表示されるのもおかしな話。
-//処理の軽そうな方法を考えなくては。
-TalkGuestPersonality  {
-    _GuestTalk[0] = "SampleGuestTalk1"
-    _GuestTalk[1] = "SampleGuestTalk2"
-
-    if ( _GuestTalk[GuestTalkCount] != "" ) {
-        TalkRadioText( _GuestTalk[_count] )
-        GuestTalkCount = TOINT(GuestTalkCount) + 1
+    //前回とおんなじもしくは空の場合
     } else {
-        TalkRadioText( "ごめんね。ストックが切れてるや。")
+        TalkGuestPersonality()
     }
 }
+
+
 
 
 
