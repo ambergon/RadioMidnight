@@ -19,9 +19,6 @@ GetWeather {
         FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
         _weatherText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getWeather.exe" , WeatherLocationNum ) 
         _weatherText
-
-    } else {
-        "ん～ 地域が設定されてないかな。"
     }
 }
 

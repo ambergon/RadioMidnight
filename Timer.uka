@@ -57,7 +57,6 @@ OnInputTimeSchedule {
     }
     _CheckWeek  = SetWeek
     ERASEVAR( "SetWeek" )
-    _MenuText = MainContents()
 
     if RE_MATCH( TOSTR(_time) , '[0-9]...' ) {
 
@@ -70,6 +69,7 @@ OnInputTimeSchedule {
             EVAL( "%(_week).HOUR      =   TOSTR(88)" )
             EVAL( "%(_week).MINUTES   =   TOSTR(88)" )
 
+            _MenuText = MainContents()
             _text = "無効化しておいたよ。\x" + _MenuText
             _text
 
@@ -77,10 +77,12 @@ OnInputTimeSchedule {
             EVAL( "%(_week).HOUR      =   TOSTR(_hour)" )
             EVAL( "%(_week).MINUTES   =   TOSTR(_min)" )
 
+            _MenuText = MainContents()
             _text = "%( _hour )時%( _min )分に設定したよ。\x" + _MenuText
             _text
         }
     } else {
+        _MenuText = MainContents()
         _text = "設定できなかったよ。\x" + _MenuText
         _text
     }

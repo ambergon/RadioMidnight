@@ -4,7 +4,6 @@
 本当はゴーストに喋ってほしかったのですが、毎日更新するのは厳しい。<br>
 しかし、ラジオとしてなら可能性があるのではないかと考えに至りました。<br>
 最終的な望みはSSPの習慣化です。<br>
-この時間ならたぶん誰かが起動している。とか楽しいじゃないですか?<br>
 
 
 # 曜日ごとのパーソナリティについて。
@@ -31,11 +30,9 @@ aタグが使えます。<br>
 ## 原稿について。
 githubを利用しようと考えています。<br>
 サンプル。<br>
-[GitHub - ambergon/RadioText](https://github.com/ambergon/RadioText)<br>
-
 rawで読み込みます。下記をサンプルURLとして、プラグインメニューのURLをテストする。に挿入してみてください。<br>
 実際にどのようにバルーンに表示されるかチェックすることができます。<br>
-[ReadMe.txt](https://raw.githubusercontent.com/ambergon/RadioText/master/ReadMe.txt)<br>
+[ReadMe.txt](https://raw.githubusercontent.com/ambergon/RadioMidnight/master/SampleText.txt)<br>
 
 
 ## 置換について。
@@ -52,6 +49,34 @@ rawで読み込みます。下記をサンプルURLとして、プラグイン�
 
 ## パーソナリティに望むこと。
 リラックスして好きなことを話してほしい。<br>
+テキストはUTF-8で扱ってください。<br>
+
+パーソナリティをするうえで連絡していただく要素は下記です。<br>
+- 希望の曜日
+- Person
+    表示されるお名前
+- Url
+    テキストが公開されているURL
+```
+曜日.Person       { "" }
+曜日.Url          { ""}
+```
+
+ほかにあったらいいもの<br>
+- ホームページ 
+    名前をクリックした際に飛びます。<br>
+    ツイッターなどのリンクでも。<br>
+- はがきの宛先URL
+    dullNeko氏公開のツール。送信先リンクがあればお便りを送れるように。<br>
+    [GitHub - dullNeko/WebClapModoki-GAS: WebClap-like system by using Google Apps Script & Google spreadsheet.](https://github.com/dullNeko/WebClapModoki-GAS)<br>
+```
+曜日.HomePage     { "" }
+曜日.Hagaki       { ""}
+```
+            
+
+
+
 
 
 
