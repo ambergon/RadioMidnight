@@ -13,7 +13,9 @@ dic,ReadME.uka
 dic,Weather.uka
 dic,Hagaki.uka
 dic,UserConfig.uka
-dic,GuestPersonality.uka
+dic,GuestArchive.uka
+dic,Week.uka
+dic,Timer.uka
 
 iolog, off
 //log,LogFileName.log	

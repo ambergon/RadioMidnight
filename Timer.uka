@@ -1,0 +1,89 @@
+
+
+
+
+
+
+
+
+
+OnPluginLoad.Timer {
+    //初期化
+    if ( TOSTR( Sun.HOUR        ) == "" ){ Sun.HOUR       = "88" }   
+    if ( TOSTR( Mon.HOUR        ) == "" ){ Mon.HOUR       = "88" }
+    if ( TOSTR( Tues.HOUR       ) == "" ){ Tues.HOUR      = "88" }
+    if ( TOSTR( Wednes.HOUR     ) == "" ){ Wednes.HOUR    = "88" }
+    if ( TOSTR( Thurs.HOUR      ) == "" ){ Thurs.HOUR     = "88" }
+    if ( TOSTR( Fri.HOUR        ) == "" ){ Fri.HOUR       = "88" }
+    if ( TOSTR( Satur.HOUR      ) == "" ){ Satur.HOUR     = "88" }
+
+    if ( TOSTR( Sun.MINUTES     ) == "" ){ Sun.MINUTES    = "88" }
+    if ( TOSTR( Mon.MINUTES     ) == "" ){ Mon.MINUTES    = "88" }
+    if ( TOSTR( Tues.MINUTES    ) == "" ){ Tues.MINUTES   = "88" }
+    if ( TOSTR( Wednes.MINUTES  ) == "" ){ Wednes.MINUTES = "88" }
+    if ( TOSTR( Thurs.MINUTES   ) == "" ){ Thurs.MINUTES  = "88" }
+    if ( TOSTR( Fri.MINUTES     ) == "" ){ Fri.MINUTES    = "88" }
+    if ( TOSTR( Satur.MINUTES   ) == "" ){ Satur.MINUTES  = "88" }
+}
+
+OnPluginUnload.Timer {
+}
+
+
+OnChangeOnAir {
+    SetWeek       =     reference[0]
+    "\_q4桁の半角数字で時間を入力してね。\n【例】2230 -> 22時30分\![open,inputbox,OnInputTimeSchedule]\_q"
+}
+
+
+OnInputTimeSchedule {
+    _time       = TOSTR( reference[0] )
+    //yaya.dllをそろえてもゴーストとプラグインで挙動が変わる。
+    //なぜかこちらはTOINTで処理が起きている。
+    //共通辞書が問題かもしれん
+    //ので、文字数をそろえてみる。
+    if ( STRLEN( _time ) == "3" ) {
+        _time = TOSTR( "0" ) + TOSTR( _time ) 
+
+    } elseif ( STRLEN( _time ) == "2" ) {
+        _time = TOSTR( "00" ) + TOSTR( _time ) 
+
+    } elseif ( STRLEN( _time ) == "1" ) {
+        _time = TOSTR( "000" ) + TOSTR( _time ) 
+
+    } elseif ( TOINT( _time )  == "" ) {
+        _time = TOSTR( "0000" )
+
+    }
+    _CheckWeek  = SetWeek
+    ERASEVAR( "SetWeek" )
+    _MenuText = MainContents()
+
+    if RE_MATCH( TOSTR(_time) , '[0-9]...' ) {
+
+        _hour   = SUBSTR( TOSTR(_time) , 0 , 2)
+        _min    = SUBSTR( TOSTR(_time) , 2 , 2)
+        _week = NumToWeek( _CheckWeek )
+
+        if ( TOINT(_hour) >= 24 || TOINT(_min) >= 60 ) {
+            //"ちょっと数字が大きいかな。"
+            EVAL( "%(_week).HOUR      =   TOSTR(88)" )
+            EVAL( "%(_week).MINUTES   =   TOSTR(88)" )
+
+            _text = "無効化しておいたよ。\x" + _MenuText
+            _text
+
+        } else {
+            EVAL( "%(_week).HOUR      =   TOSTR(_hour)" )
+            EVAL( "%(_week).MINUTES   =   TOSTR(_min)" )
+
+            _text = "%( _hour )時%( _min )分に設定したよ。\x" + _MenuText
+            _text
+        }
+    } else {
+        _text = "設定できなかったよ。\x" + _MenuText
+        _text
+    }
+}
+
+

@@ -7,22 +7,6 @@ OnPluginLoad.Menu {
     if ( RadioName == "" ) { RadioName = "Guest" }
     ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
 
-    //初期化
-    if ( TOSTR( Sun.HOUR        ) == "" ){ Sun.HOUR       = "88" }   
-    if ( TOSTR( Mon.HOUR        ) == "" ){ Mon.HOUR       = "88" }
-    if ( TOSTR( Tues.HOUR       ) == "" ){ Tues.HOUR      = "88" }
-    if ( TOSTR( Wednes.HOUR     ) == "" ){ Wednes.HOUR    = "88" }
-    if ( TOSTR( Thurs.HOUR      ) == "" ){ Thurs.HOUR     = "88" }
-    if ( TOSTR( Fri.HOUR        ) == "" ){ Fri.HOUR       = "88" }
-    if ( TOSTR( Satur.HOUR      ) == "" ){ Satur.HOUR     = "88" }
-
-    if ( TOSTR( Sun.MINUTES     ) == "" ){ Sun.MINUTES    = "88" }
-    if ( TOSTR( Mon.MINUTES     ) == "" ){ Mon.MINUTES    = "88" }
-    if ( TOSTR( Tues.MINUTES    ) == "" ){ Tues.MINUTES   = "88" }
-    if ( TOSTR( Wednes.MINUTES  ) == "" ){ Wednes.MINUTES = "88" }
-    if ( TOSTR( Thurs.MINUTES   ) == "" ){ Thurs.MINUTES  = "88" }
-    if ( TOSTR( Fri.MINUTES     ) == "" ){ Fri.MINUTES    = "88" }
-    if ( TOSTR( Satur.MINUTES   ) == "" ){ Satur.MINUTES  = "88" }
 }
 OnPluginUnload.Menu {
     ERASEVAR( "ReadMeTexts" )
@@ -50,69 +34,6 @@ MainContents {
     %( BGMtext              )\n/
 	\n[half]\_q\x[noclear]\e"
 }
-
-
-//送信テキストのラジオ化テストと問題がなければ送信する。
-GuestPersonality {
-    "【寄稿する】\n/
-    \_a[OnContributionTestUrlDialog]URLをテストする。\_a\n/
-    \_a[OnContributionTestDialog]単発原稿をテストする。\_a\n/
-    \_a[OnContribution]単発原稿を送信する。\_a\n/
-    "
-}
-
-OnContributionTestUrlDialog {
-    "\_qテストしたいURLを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\n\nURLの場合は改行ごとに\\w3と改行が挿入されます。\![open,inputbox,OnContributionTestUrl]\_q"
-}
-OnContributionTestUrl {
-    _url = reference[0]
-    //発声
-    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
-    _text = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
-    if ( _text == "" ){
-        "何も読み取れませんでした。"
-    } else {
-        TalkRadioText( _text )
-    }
-}
-
-OnContributionTestDialog {
-    "\_qテストしたいテキストを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\![open,inputbox,OnContributionTest]\_q"
-}
-//テストテキストを表示し、
-//下書きを保存する。
-OnContributionTest {
-    RadioTextDraft = reference[0]
-    //発声
-    TalkRadioText( RadioTextDraft )
-}
-
-//最後にテスト実行した内容を保存しておけばいいか。
-OnContribution {
-    _Guest.Url = "https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec"
-    if ( RadioName == "") {
-        RN = "Guest"
-    } else {
-        RN = RadioName
-    }
-
-    _text       = RadioTextDraft
-    ERASEVAR( "RadioTextDraft" )
-
-    //送信用に変換
-    _text       = CheckRadioText( _text )
-    //こっち側だけescapeしないと正常に届かないな。
-    //[をescapeすると向こうで\[で残る。
-    _text       = REPLACE( _text , "]" , "\]" )
-
-    if ( _text != "" ){
-        "\![execute,http-POST,%(_Guest.Url),--param=message_body=%(BootCheck);%(RN);%(_text),--async=OnWebClapModoki,--timeout=5]送信しました。"
-    } else {
-        MainContents()
-    }
-}
-
-
 
 
 
@@ -148,63 +69,6 @@ RadioBoard {
 }
 
 
-
-//設定されている時間を変更したい。
-//ダイアログを出して時間と分を指定できるようにする必要がある。
-OnChangeOnAir {
-    SetWeek       =     reference[0]
-    "4桁の半角数字で時間を入力してね。\n【例】2230 -> 22時30分\![open,inputbox,OnInputTimeSchedule]"
-}
-
-//直接evalに流すのはよくない。
-//四桁数字を受け取って二桁に分割する。
-OnInputTimeSchedule {
-    _time       = TOSTR( reference[0] )
-    _CheckWeek  = SetWeek
-    ERASEVAR( "SetWeek" )
-
-    //_time = TOSTR( "1234" )
-    if RE_MATCH( _time , '[0-9]...' ) {
-
-        _hour   = SUBSTR( _time , 0 , 2)
-        _min    = SUBSTR( _time , 2 , 2)
-
-        if ( _hour >= 24 || _min >= 60 ) {
-            "ちょっと数字が大きいかな。"
-
-        } else {
-            _week = ""
-            if _CheckWeek == 0 {
-                _week = "Sun"
-
-            } elseif _CheckWeek == 1 {
-                _week = "Mon"
-
-            } elseif _CheckWeek == 2 {
-                _week = "Tues"
-
-            } elseif _CheckWeek == 3 {
-                _week = "Wednes"
-
-            } elseif _CheckWeek == 4 {
-                _week = "Thurs"
-
-            } elseif _CheckWeek == 5 {
-                _week = "Fri"
-
-            } else {
-                _week = "Satur"
-            }
-            EVAL( "%(_week).HOUR      =   _hour" )
-            EVAL( "%(_week).MINUTES   =   _min" )
-            "%( _hour )時%( _min )分に設定したよ。"
-        }
-    } else {
-        "設定できなかったよ。"
-    }
-}
-
-
 //宛先にHomePageがあればリンク付きにするか。
 //無ければ名前だけを返そう。
 ExistHomePage {
@@ -236,6 +100,7 @@ UserData {
     貴方のラジオネーム : %(RadioName)\n/
     \_a[OnChangeRadioNameDialog]ラジオネームを変更する。\_a\n"
 }
+
 SaveClickContent {
     _OldLinkText = ""
     if ( alink_URL != "" ) { _OldLinkText = "【取得項目】\n\_a[OnOpenLinkDialog]%(alink_TITLE)\_a\n" }
@@ -265,7 +130,9 @@ OnChangeRadioNameDialog {
 }
 OnChangeRadioName {
     RadioName  = reference[0]
-    "\_q現在の貴方のラジオネーム : %(RadioName)"
+    _MenuText = MainContents()
+    _text = "\_q現在の貴方のラジオネーム : %(RadioName)\_q\x" + _MenuText
+    _text
 }
 
 
@@ -316,50 +183,6 @@ CheckRadioText {
 
 
 
-TalkRadioText {
-    _text       = _argv[0]
-
-    //ネットから落としたテキストはこの段階でサニタイズが入るようにするか。
-    _text       = CheckRadioText( _text )
-
-    //空送信・空白送信除去
-    _CheckText  = REPLACE( _text , " " , "" )
-    _CheckText  = REPLACE( _CheckText , "　" , "" )
-
-    if ( _CheckText != "" ) {
-        _weatherText = GetWeather()
-        //_fileBGM     = Music.Path
-
-        //クリック等バルーンを消せないように。
-        _Option.RegistClose         = "\![enter,nouserbreakmode]"
-        _Option.RegistClose.END     = "\![leave,nouserbreakmode]"
-
-        ////他のイベント通知で割り込まれたりしないように。
-        //ghostを優先したいので切る。
-        //問題は、musicのstopが発声せずにループが起きる。
-        //otherghosttalkで検知するか。
-        //_Option.RegistInterrupt      = "\t"
-        //_Option.RegistInterrupt.END  = ""
-
-        _Options        = _Option.RegistClose     
-        _Options.END    = _Option.RegistClose.END 
-
-        _SoundBefore    = _Options      + "\b[-1]" + SoundStart() + "\b[2]"
-        _SoundAfter     = SoundStop() + _Options.END
-
-        _talk            =  _SoundBefore + _text + "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _weatherText + "\0" + _SoundAfter + "\e"
-        _talk
-        
-        res_marker = '【RadioMidnightのお時間】'
-        //表示途中のバルーンを食わないように。
-        //選択肢待機とかは食ってしまうので完ぺきではない。
-        //"\![get,property,OnAAA,currentghost.status]"
-        //を試してみたが、このスクリプトを呼ぶこと自体が実行中になってしまい、常にtalking
-        res_script_option = "nobreak,notranslate"
-    } else {
-        MainContents()
-    }
-}
 
 
 

@@ -1,0 +1,55 @@
+
+//投げると曜日のアルファベットを返す。
+ToDayOfWeek {
+    _week = ""
+    if weekday == 0 {
+        _week = "Sun"
+
+    } elseif weekday == 1 {
+        _week = "Mon"
+
+    } elseif weekday == 2 {
+        _week = "Tues"
+
+    } elseif weekday == 3 {
+        _week = "Wednes"
+
+    } elseif weekday == 4 {
+        _week = "Thurs"
+
+    } elseif weekday == 5 {
+        _week = "Fri"
+
+    } else {
+        _week = "Satur"
+    }
+    _week
+}
+
+NumToWeek {
+    _CheckWeek = _argv[0]
+    _week = ""
+    if _CheckWeek == 0 {
+        _week = "Sun"
+
+    } elseif _CheckWeek == 1 {
+        _week = "Mon"
+
+    } elseif _CheckWeek == 2 {
+        _week = "Tues"
+
+    } elseif _CheckWeek == 3 {
+        _week = "Wednes"
+
+    } elseif _CheckWeek == 4 {
+        _week = "Thurs"
+
+    } elseif _CheckWeek == 5 {
+        _week = "Fri"
+
+    } else {
+        _week = "Satur"
+    }
+    _week
+}
+

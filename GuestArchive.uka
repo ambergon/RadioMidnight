@@ -1,0 +1,107 @@
+
+OnPluginLoad.Guest {
+    if ( GuestTalkCount == "" ) {
+        GuestTalkCount = "0"
+    }
+}
+OnPluginUnload.Guest {
+    //ERASEVAR( "" )
+}
+
+
+//無かった時の担当。
+//カウントを組んで実行したいね。
+//しかし同じものが二回表示されるのもおかしな話。
+//処理の軽そうな方法を考えなくては。
+TalkGuestPersonality  {
+        
+    //Call
+    //_GuestTalk[0] = "SampleGuestTalk1"
+    //_GuestTalk[1] = "SampleGuestTalk2"
+
+    if ( _GuestTalk[GuestTalkCount] != "" ) {
+        GuestTalkCount = TOINT(GuestTalkCount) + 1
+        _GuestTalk[_count]
+    } else {
+        //"ごめんね。ストックが切れてるや。"
+    }
+}
+
+
+
+
+
+//送信テキストのラジオ化テストと問題がなければ送信する。
+//寄稿関係。
+GuestPersonality {
+    "【寄稿する】\n/
+    \_a[OnContributionTestUrlDialog]URLをテストする。\_a\n/
+    \_a[OnContributionTestDialog]単発原稿をテストする。\_a\n/
+    \_a[OnContribution]単発原稿を送信する。\_a\n/
+    "
+}
+
+OnContributionTestUrlDialog {
+    "\_qテストしたいURLを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\n\nURLの場合は改行ごとに\\w3と改行が挿入されます。\![open,inputbox,OnContributionTestUrl]\_q"
+}
+OnContributionTestUrl {
+    _url = reference[0]
+    //発声
+    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
+    _text = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
+
+    //空送信・空白送信除去
+    _CheckText  = REPLACE( _text , " " , "" )
+    _CheckText  = REPLACE( _CheckText , "　" , "" )
+
+    if ( _CheckText == "" ){
+        "何も読み取れませんでした。"
+    } else {
+        TalkRadioText( _text )
+    }
+}
+
+
+OnContributionTestDialog {
+    "\_qテストしたいテキストを挿入してください。\n音が出ますので、バルーンが出現するゴーストの設定から\n音を鳴らさないのチェックを外しておいてください。\![open,inputbox,OnContributionTest]\_q"
+}
+//テストテキストを表示し、
+//下書きを保存する。
+OnContributionTest {
+    _text = reference[0]
+
+    //空送信・空白送信除去
+    _CheckText  = REPLACE( _text , " " , "" )
+    _CheckText  = REPLACE( _CheckText , "　" , "" )
+
+    if ( _CheckText != "" ){
+        RadioTextDraft = _text
+        TalkRadioText( _text )
+    }
+}
+
+//最後にテスト実行した内容を保存しておけばいいか。
+OnContribution {
+    _Guest.Url = "https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec"
+    if ( RadioName == "") {
+        RN = "Guest"
+    } else {
+        RN = RadioName
+    }
+
+    _text       = RadioTextDraft
+    ERASEVAR( "RadioTextDraft" )
+
+    //送信用に変換
+    _text       = CheckRadioText( _text )
+    //こっち側だけescapeしないと正常に届かないな。
+    //[をescapeすると向こうで\[で残る。
+    _text       = REPLACE( _text , "]" , "\]" )
+
+    if ( _text != "" ){
+        "\![execute,http-POST,%(_Guest.Url),--param=message_body=%(BootCheck);%(RN);%(_text),--async=OnWebClapModoki,--timeout=5]送信しました。"
+    } else {
+        MainContents()
+    }
+}
+

@@ -11,7 +11,7 @@ id,baf40160-90bf-11ed-b05e-0800200c9a66
 
 
 secondchangeinterval,60
-otherghosttalk,1
+otherghosttalk,0
 
 //更新url
 //homeurl,

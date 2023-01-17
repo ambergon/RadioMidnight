@@ -1,14 +1,8 @@
 
 OnPluginLoad.Sound {
     if ( Sound.Max == "" ) {
-        Sound.Max == "50"
+        Sound.Max == "30"
     }
-
-    _file = Music.Path()
-    BGMtext   = "【BGM 音量 : %(Sound.Max)】\n/
-        \_a[OnMusicVolume,%(_file)]音量調節\_a\n/
-        \_a[OnStopMusic]BGMの停止\_a\n/
-        "
 }
 OnPluginUnload.Sound {
     ERASEVAR( "BGMtext" )
@@ -19,6 +13,16 @@ Music.Path          {
     _path
 }
 Music.Delay         { "28000"                   }
+
+BGMtext {
+    _file = Music.Path()
+    "【BGM 音量 : %(Sound.Max)】\n/
+    \_a[OnMusicVolume]音量調節\_a\n/
+    \_a[OnStopMusic,%(_file)]BGMの停止\_a\n/
+    "
+}
+
+
 
 
 SoundStart { 
@@ -59,15 +63,19 @@ OnStopMusic {
     SoundStop()
 }
 OnMusicVolume {
-    "入力範囲 00-99\n2桁の半角数字で時間を入力してね。\n【例】00 -> 音量0\![open,inputbox,OnInputVolume]"
+    "\_q入力範囲 00-99\n2桁の半角数字で時間を入力してね。\n【例】00 -> 音量0\![open,inputbox,OnInputVolume]\_q"
 }
 OnInputVolume {
-    _Volume       = TOSTR( reference[0] )
-    if RE_MATCH( _Volume , '[0-9].' ) {
-        Sound.Max = _Volume
-        "%( Sound.Max )に設定したよ。"
+    _Volume       = reference[0]
+    _MenuText = MainContents()
+    if ( RE_MATCH( TOSTR(_Volume) , '[0-9].' ) || RE_MATCH( TOSTR(_Volume) , '[0-9]' )) {
+        Sound.Max = TOINT(_Volume)
+        _text = "%( Sound.Max )に設定したよ。\x" + _MenuText
+        _text
     } else {
-        "設定できなかったよ。"
+        _text = "設定できなかったよ。\x" + _MenuText
+        _text
+        //_Volume       
     }
 }
 

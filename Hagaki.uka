@@ -46,8 +46,11 @@ OnSendHagaki {
 
     if ( _CheckText != "" ) {
 
+        _MenuText = MainContents()
         //引数の数が合っていないと使えないようだ。
-        "\![execute,http-POST,%(Url),--param=message_body=%(BootCheck);%(RN);%(_SendText),--async=OnWebClapModoki,--timeout=5]"
+        
+        _text = "\![execute,http-POST,%(Url),--param=message_body=%(BootCheck);%(RN);%(_SendText),--async=OnWebClapModoki,--timeout=5]送信したよ。\x" + _MenuText
+        _text 
         RN       = ""
         Person   = ""
         Url      = ""

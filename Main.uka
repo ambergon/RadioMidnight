@@ -1,6 +1,9 @@
 //起動時アップデートだとつけっぱなしで死ぬ。
 //作業の途中でもつい手を止めちゃうような。
 //## 自動アップデート機能が欲しい。
+//自動でupdateできるんだ。
+//narも作ってくれていいんじゃないか?
+//きちんと発言内容が過去として格納されるか確かめること。
 
 //guest
 //https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec
@@ -11,93 +14,129 @@
 
 
 
+//readme
+//読み込み文字コードの問題。
+//サンプルテキストをリポジトリに入れてけ。
+//personalityをしてくれる人にどの情報を提供してほしいのか。
+
+
 
 
 
 version {
 	"origin/1.0"
 }
-OnPluginLoad.Self {
+OnPluginLoad.Main {
     if ( BootCheck == "" ) {
         BootCheck = TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))
     }
-    TalkWaitCount = 0
 }
 
-OnPluginUnload.Self {
-    ERASEVAR( "TalkWaitCount" )
+OnPluginUnload.Main {
 }
 
 
-
-
-//現在の曜日ごとに指定した時間を確認して、hour minuteが等しければ実行せずにtrue
-//OnOtherGhostTalkで引っかかったら30秒の大気を入れておくか。表示後5秒程度の猶予を与えよう。
-//条件があった場合にTrueにして、ラジオ放送開始でFalseに戻せばいいか。
+//60秒ごとに呼ばれる
+//..ので下手に秒ごとに処理されると思ったらだめだな。
+//ゲストもなければ何も発言しないようにするか?
+//それとも天気だけ?
 OnSecondChange {
-    //if  0
-    TalkWaitCount = TalkWaitCount - 1
+    _week = ToDayOfWeek()
+    EVAL( "_hour = %(_week).HOUR" )
+    EVAL( "_min = %(_week).MINUTES" )
 
-    if ( TOSTR( hour ) == "0"  && TOSTR( minute ) == "30" ) {
-        //"ラジオ開始。"
-        WeekRadio()
-    }
-}
-
-
-//aタグqタグなどの選択肢が出ていた場合止めたい。
-//nobreakだけでは表示中の抑制しかできない。
-//check text
-OnOtherGhostTalk {
-    TalkWaitCount = 0
-    _TalkText = reference[4]
-    if ( RE_SEARCH( _TalkText , "\\q") || RE_SEARCH( _TalkText , "\\_a") ) {
-        TalkWaitCount = 30
+    //01も問題なく。
+    if ( TOINT( hour ) == TOINT( _hour )  && TOINT( minute ) == TOINT( _min ) ) {
+        res_marker = '【RadioMidnightのお時間】'
+        res_script_option = "nobreak,notranslate"
+        //WeekRadio()
+    //} else {
+    //    text = "\_q今の時間" + hour + ":" + minute + "\n予定時間 " + _hour + ":" + _min + "分\_q"
+    //    text
     }
 }
 
 
 WeekRadio {
 
-    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
-    _week = ""
-    if weekday == 0 {
-        _week = "Sun"
-
-    } elseif weekday == 1 {
-        _week = "Mon"
-
-    } elseif weekday == 2 {
-        _week = "Tues"
-
-    } elseif weekday == 3 {
-        _week = "Wednes"
-
-    } elseif weekday == 4 {
-        _week = "Thurs"
-
-    } elseif weekday == 5 {
-        _week = "Fri"
-
-    } else {
-        _week = "Satur"
-    }
-
+    _week = ToDayOfWeek()
     EVAL( "_url = %(_week).Url" )
     EVAL( "_old = %(_week).OldText" )
 
+    //文字コードはUTF-8
+    FUNCTIONEX("./dll/proxy_ex.dll" ,  "/charset" , "UTF-8"  )
     _HtmlText = FUNCTIONEX( "./dll/proxy_ex.dll" , "./getHtmlOne.exe" , _url ) 
-    if ( _old != _HtmlText || _HtmlText != "" ) {
-        TalkRadioText( _HtmlText )
-        EVAL( "%(_week).OldText = _HtmlText" )
 
-    //前回とおんなじもしくは空の場合
+    //空送信・空白送信除去
+    _CheckText  = REPLACE( _HtmlText , " " , "" )
+    _CheckText  = REPLACE( _CheckText , "　" , "" )
+
+    //前回と違う。かつ空ではない。
+    if ( _old != _HtmlText || _CheckText != "" ) {
+        EVAL( "%(_week).OldText = _HtmlText" )
+        TalkRadioText( _HtmlText )
+
     } else {
-        TalkGuestPersonality()
+
+        //ストックのチェック
+        _text = TalkGuestPersonality()
+        if ( _text != "" ) {
+            TalkRadioText ( _text )
+        } else {
+            //ストックもなかった。
+            //天気くらい引っ張ろうかという悩みはあるが、
+            //無理にでしゃばる必要もないのではないか?
+            //TalkRadioText ( "" )
+        }
     }
 }
 
 
+TalkRadioText {
+    _text       = _argv[0]
+
+    //ネットから落としたテキストはこの段階でサニタイズが入るようにするか。
+    _text       = CheckRadioText( _text )
+
+    _weatherText = GetWeather()
+    //_fileBGM     = Music.Path
+
+    //クリック等バルーンを消せないように。
+    _Option.RegistClose         = "\![enter,nouserbreakmode]"
+    _Option.RegistClose.END     = "\![leave,nouserbreakmode]"
+
+    ////他のイベント通知で割り込まれたりしないように。
+    //ghostを優先したいので切る。
+    //問題は、musicのstopが発声せずにループが起きる。
+    //otherghosttalkで検知するか。
+    //_Option.RegistInterrupt      = "\t"
+    //_Option.RegistInterrupt.END  = ""
+
+    _Options        = _Option.RegistClose     
+    _Options.END    = _Option.RegistClose.END 
+
+    _SoundBefore    = _Options      + "\b[-1]" + SoundStart() + "\b[2]"
+    _SoundAfter     = SoundStop() + _Options.END
+
+    _talk            =  _SoundBefore + _text + "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _weatherText + "\0" + _SoundAfter + "\e"
+    _talk
+}
+
+
+//表示途中のバルーンを食わないように。
+//選択肢待機とかは食ってしまうので完ぺきではない。
+//"\![get,property,OnAAA,currentghost.status]"
+//を試してみたが、このスクリプトを呼ぶこと自体が実行中になってしまい、常にtalking
+//aタグqタグなどの選択肢が出ていた場合止めたい。
+//nobreakだけでは表示中の抑制しかできない。
+//..これ、複数ゴースト使用時に延々と発声する可能性があるから見送り。
+//OnOtherGhostTalk {
+//    TalkWaitCount = 0
+//    _TalkText = reference[4]
+//    if ( RE_SEARCH( _TalkText , "\\q") || RE_SEARCH( _TalkText , "\\_a") ) {
+//        TalkWaitCount = 30
+//    }
+//}
 
 
 
