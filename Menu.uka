@@ -5,7 +5,8 @@
 
 OnPluginLoad.Menu {
     if ( RadioName == "" ) { RadioName = "Guest" }
-    ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\n"
+    _version = version()
+    ReadMeTexts     = "【説明】\n\_a[OnReadMeList]このプラグインの使い方\_a\nVersion : %(_version)\n"
 
 }
 OnPluginUnload.Menu {
@@ -30,8 +31,8 @@ MainContents {
     %( UserData             )/
     %( SaveClickContent     )\n/
     %( GuestPersonality     )\n/
-    %( ReadMeTexts          )\n/
     %( BGMtext              )\n/
+    %( ReadMeTexts          )\n/
 	\n[half]\_q\x[noclear]\e"
 }
 

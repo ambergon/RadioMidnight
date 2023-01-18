@@ -8,10 +8,8 @@ filename,yaya.dll
 
 id,baf40160-90bf-11ed-b05e-0800200c9a66
 
-
-
 secondchangeinterval,60
 otherghosttalk,0
 
 //更新url
-//homeurl,
+homeurl,https://raw.githubusercontent.com/ambergon/RadioMidnight/master/

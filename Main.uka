@@ -1,18 +1,3 @@
-//起動時アップデートだとつけっぱなしで死ぬ。
-//作業の途中でもつい手を止めちゃうような。
-//## 自動アップデート機能が欲しい。
-//自動でupdateできるんだ。
-//narも作ってくれていいんじゃないか?
-
-
-//きちんと発言内容が過去として格納されるか確かめること。
-
-//personalityをしてくれる人にどの情報を提供してほしいのか。
-
-
-
-
-
 //guest
 //https://script.google.com/macros/s/AKfycbyFQO_ty4eLOIhhRTHfjLHk1INEqK_2P3k8BWNdAl_JoBFvV9dxpiIdSiB0AW9QzcP7GQ/exec
 
@@ -23,15 +8,17 @@
 
 
 version {
-	"origin/1.0"
+	"origin/0.0.1"
 }
 OnPluginLoad.Main {
     if ( BootCheck == "" ) {
         BootCheck = TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))
     }
+    CheckRadioVersion = "True"
 }
 
 OnPluginUnload.Main {
+    ERASEVAR( "CheckRadioVersion" )
 }
 
 
@@ -44,14 +31,19 @@ OnSecondChange {
     EVAL( "_hour = %(_week).HOUR" )
     EVAL( "_min = %(_week).MINUTES" )
 
-    //01も問題なく。
-    if ( TOINT( hour ) == TOINT( _hour )  && TOINT( minute ) == TOINT( _min ) ) {
-        res_marker = '【RadioMidnightのお時間】'
-        res_script_option = "nobreak,notranslate"
-        //WeekRadio()
-    //} else {
-    //    text = "\_q今の時間" + hour + ":" + minute + "\n予定時間 " + _hour + ":" + _min + "分\_q"
-    //    text
+    if ( CheckRadioVersion == "True" ) {
+        CheckRadioVersion = "False"
+        "\_q\![updateother,--plugin=UpdateTestPlugin]\_q"
+        //"\_q\![updateother,--plugin=UpdateTestPlugin]updateチェック\_q"
+
+    } else {
+        //01も問題なく。
+        if ( TOINT( hour ) == TOINT( _hour )  && TOINT( minute ) == TOINT( _min ) ) {
+            res_marker = '【RadioMidnightのお時間】'
+            res_script_option = "nobreak,notranslate"
+            //WeekRadio()
+
+        }
     }
 }
 

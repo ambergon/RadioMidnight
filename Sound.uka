@@ -67,12 +67,13 @@ OnMusicVolume {
 }
 OnInputVolume {
     _Volume       = reference[0]
-    _MenuText = MainContents()
     if ( RE_MATCH( TOSTR(_Volume) , '[0-9].' ) || RE_MATCH( TOSTR(_Volume) , '[0-9]' )) {
         Sound.Max = TOINT(_Volume)
+        _MenuText = MainContents()
         _text = "%( Sound.Max )に設定したよ。\x" + _MenuText
         _text
     } else {
+        _MenuText = MainContents()
         _text = "設定できなかったよ。\x" + _MenuText
         _text
         //_Volume       
