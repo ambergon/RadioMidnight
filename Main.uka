@@ -8,7 +8,7 @@
 
 
 version {
-	"origin/0.0.2"
+	"origin/0.0.3"
 }
 OnPluginLoad.Main {
     if ( BootCheck == "" ) {

@@ -1,7 +1,7 @@
 
 OnPluginLoad.Sound {
     if ( Sound.Max == "" ) {
-        Sound.Max == "30"
+        Sound.Max = "30"
     }
 }
 OnPluginUnload.Sound {
