@@ -24,10 +24,9 @@ BGMtext {
 
 
 
-
 SoundStart { 
-    _file   = Music.Path
-    _Delay  = Music.Delay
+    _file   = Music.Path()
+    _Delay  = Music.Delay()
     //_file = _argv[0] 
 
     //フェードイン 
@@ -41,8 +40,8 @@ SoundStart {
     _fadeIn
 } 
 SoundStop { 
-    _file   = Music.Path
-    //_Delay  = Music.Delay
+    _file   = Music.Path()
+    //_Delay  = Music.Delay()
     //_file = _argv[0] 
 
     //フェードアウト 

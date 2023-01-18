@@ -19,7 +19,9 @@ OnMenuExec {
 
     res_script_option = "notranslate"
     MainContents()
+
     //WeekRadio()
+    //TalkRadioText ( "test" )
 }
 
 
