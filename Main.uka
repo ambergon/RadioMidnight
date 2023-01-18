@@ -40,7 +40,7 @@ OnSecondChange {
         if ( TOINT( hour ) == TOINT( _hour )  && TOINT( minute ) == TOINT( _min ) ) {
             res_marker = '【RadioMidnightのお時間】'
             res_script_option = "nobreak,notranslate"
-            //WeekRadio()
+            WeekRadio()
 
         }
     }

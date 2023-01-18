@@ -3,9 +3,9 @@ Mon.Person          { "" }
 Tues.Person         { "" }
 
 Wednes.Person       { "安馬" }
-Wednes.HomePage     { "https://twitter.com/Sc_lFoxGon" }
-Wednes.Hagaki       { "https://script.google.com/macros/s/AKfycbwJrOy4PSA6Yfeo-vStWhOnhU39CdAN6NiYCVee3sIs-p-4MtNwviYdMyuEd3bXZfCebQ/exec"}
-Wednes.Url          { "https://raw.githubusercontent.com/ambergon/RadioText/master/ReadMe.txaat"}
+Wednes.HomePage     { "https://ambergonslibrary.com/category/ukagaka/" }
+Wednes.Hagaki       { "https://script.google.com/macros/s/AKfycbwJrOy4PSA6Yfeo-vStWhOnhU39CdAN6NiYCVee3sIs-p-4MtNwviYdMyuEd3bXZfCebQ/exec" }
+Wednes.Url          { "https://raw.githubusercontent.com/ambergon/RadioText/master/wed.txt" }
 
 Thurs.Person        { "" }
 Fri.Person          { "" }
