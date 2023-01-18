@@ -8,7 +8,7 @@
 
 
 version {
-	"origin/0.0.3"
+	"origin/0.0.4"
 }
 OnPluginLoad.Main {
     if ( BootCheck == "" ) {
@@ -27,16 +27,15 @@ OnPluginUnload.Main {
 //ゲストもなければ何も発言しないようにするか?
 //それとも天気だけ?
 OnSecondChange {
-    _week = ToDayOfWeek()
-    EVAL( "_hour = %(_week).HOUR" )
-    EVAL( "_min = %(_week).MINUTES" )
-
     if ( CheckRadioVersion == "True" ) {
         CheckRadioVersion = "False"
-        "\_q\![updateother,--plugin=UpdateTestPlugin]\_q"
-        //"\_q\![updateother,--plugin=UpdateTestPlugin]updateチェック\_q"
+        "\_q\![updateother,--plugin=深夜零時三十分頃のラジオ]\_q"
 
     } else {
+        _week = ToDayOfWeek()
+        EVAL( "_hour = %(_week).HOUR" )
+        EVAL( "_min = %(_week).MINUTES" )
+
         //01も問題なく。
         if ( TOINT( hour ) == TOINT( _hour )  && TOINT( minute ) == TOINT( _min ) ) {
             res_marker = '【RadioMidnightのお時間】'
