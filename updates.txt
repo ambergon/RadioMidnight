@@ -2,7 +2,7 @@ charset,Shift_JIS
 file,.gitignore43f9e59e5ba18c211db19999401a54bdsize=27date=2023-01-17T15:51:35
 file,GuestArchive.ukae02b0bf3a1eccd8e462fdfc254c218d4size=3360date=2023-01-17T14:26:55
 file,Hagaki.uka3a21c48849ce103edfe8cb44ee8264cdsize=2753date=2023-01-17T13:59:51
-file,Main.uka491023ffd63e5ed2fcacd8b3320a0ab7size=4509date=2023-01-18T23:01:07
+file,Main.ukaf23dbb97452c969115c7908a9448bbabsize=4507date=2023-01-18T23:53:09
 file,Menu.ukaa67de842a7d7e7c3bc21ce20d9e858f5size=6517date=2023-01-18T23:19:18
 file,ReadMe.uka17e58a00a7cc3a5fac38cfc2ca393bb7size=543date=2023-01-14T01:33:51
 file,ReadMe_Personality.mdb9fbff6973c44945622d13b881798932size=3456date=2023-01-17T18:14:03
@@ -11,7 +11,7 @@ file,Sound.uka57e251a2958755533ccea4e9c768f0bbsize=2066date=2023-01-18T23:11:
 file,System_yaya/yaya_optional.dic7cfa5a7ee1d90011af1dc1e04843b28fsize=6573date=2023-01-04T13:17:05
 file,System_yaya/yaya_plugin2.dic9ed032a6bb9750b245b6640ff2617e59size=18962date=2023-01-10T23:32:27
 file,Timer.uka4ff0d496bd57608ca9a312bf74383ef9size=2859date=2023-01-17T16:12:11
-file,UserConfig.ukad4ee68559cc437991b97a54ac61f6c33size=495date=2023-01-17T17:58:27
+file,UserConfig.uka07d29b763f8cc471b692cf995195819dsize=508date=2023-01-18T23:52:38
 file,Weather.ukace10083caf2285267c059854e0aa61a9size=4006date=2023-01-17T18:06:09
 file,Week.uka01807cec945087c1a90b78a049e52934size=882date=2023-01-16T22:08:09
 file,descript.txte4e496cccfcbaa15eab96216d76795c3size=311date=2023-01-18T22:03:13
