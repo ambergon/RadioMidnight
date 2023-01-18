@@ -17,6 +17,7 @@ dic,GuestArchive.uka
 dic,Week.uka
 dic,Timer.uka
 
+
 iolog, off
 //log,LogFileName.log	
 //OnSecondChange無視
