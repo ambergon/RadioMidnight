@@ -28,8 +28,8 @@ OnSecondChange {
     if ( CheckSecCountMax < CheckSecCount && CheckRadioVersion == "True" ) {
         CheckRadioVersion = "False"
         "\_q\![updateother,--plugin=深夜零時三十分頃のラジオ]\_q"
-
     }
+    CheckSecCount++
 }
 
 

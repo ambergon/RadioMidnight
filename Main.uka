@@ -49,6 +49,7 @@ OnSecondChange {
 
         }
     }
+    CheckSecCount++
 }
 
 
