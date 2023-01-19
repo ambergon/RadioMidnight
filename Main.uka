@@ -8,17 +8,22 @@
 
 
 version {
-	"origin/0.0.7"
+	"origin/0.0.8"
 }
 OnPluginLoad.Main {
     if ( BootCheck == "" ) {
         BootCheck = TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))+ TOSTR(RAND(10))
     }
-    CheckRadioVersion = "True"
+    CheckRadioVersion   = "True"
+    //実行タイミングをずらすか。
+    CheckSecCountMax    = 10
+    CheckSecCount       = 0
 }
 
 OnPluginUnload.Main {
     ERASEVAR( "CheckRadioVersion" )
+    ERASEVAR( "CheckSecCountMax" )
+    ERASEVAR( "CheckSecCount" )
 }
 
 
@@ -27,7 +32,7 @@ OnPluginUnload.Main {
 //ゲストもなければ何も発言しないようにするか?
 //それとも天気だけ?
 OnSecondChange {
-    if ( CheckRadioVersion == "True" ) {
+    if ( CheckSecCountMax < CheckSecCount && CheckRadioVersion == "True" ) {
         CheckRadioVersion = "False"
         "\_q\![updateother,--plugin=深夜零時三十分頃のラジオ]\_q"
 

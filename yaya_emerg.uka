@@ -7,11 +7,31 @@
 version {
 	"origin/1.0"
 }
-OnPluginLoad.Self {
+OnPluginLoad.Emerg {
+    CheckRadioVersion   = "True"
+    //実行タイミングをずらすか。
+    CheckSecCountMax    = 10
+    CheckSecCount       = 0
 }
 
-OnPluginUnload.Self {
+OnPluginUnload.Emerg {
+    ERASEVAR( "CheckRadioVersion" )
+    ERASEVAR( "CheckSecCountMax" )
+    ERASEVAR( "CheckSecCount" )
 }
 OnMenuExec {
     "メインの辞書でエラーが出ています。"
 }
+
+
+OnSecondChange {
+    if ( CheckSecCountMax < CheckSecCount && CheckRadioVersion == "True" ) {
+        CheckRadioVersion = "False"
+        "\_q\![updateother,--plugin=深夜零時三十分頃のラジオ]\_q"
+
+    }
+}
+
+
+
+
