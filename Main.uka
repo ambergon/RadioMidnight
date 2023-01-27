@@ -8,7 +8,7 @@
 
 
 version {
-	"origin/0.0.8"
+	"origin/0.0.9"
 }
 OnPluginLoad.Main {
     if ( BootCheck == "" ) {
@@ -83,6 +83,10 @@ WeekRadio {
             //天気くらい引っ張ろうかという悩みはあるが、
             //無理にでしゃばる必要もないのではないか?
             //TalkRadioText ( "" )
+            //"設定で天気情報だけでも流せるように"
+            if ( WeatherOnlyFlag == "True" ) {
+                TalkRadioText ( "今日はラジオはお休みだって。" )
+            }
         }
     }
 }
@@ -99,7 +103,7 @@ TalkRadioText {
     _weatherText    = ""
     _CheckWeather   = GetWeather()
     if ( _CheckWeather != "" ) {
-        _weatherText = "\1\b[2]\w9最後に天気のお知らせだよ。\n\w3" + _CheckWeather + \0
+        _weatherText = "\1\b[2]\w9天気のお知らせだよ。\n\w3" + _CheckWeather + \0
     }
 
     //クリック等バルーンを消せないように。

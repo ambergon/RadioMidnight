@@ -1,5 +1,8 @@
 
 OnPluginLoad.Weather {
+    if ( WeatherOnlyFlag == "" ) {
+        WeatherOnlyFlag = "False"
+    }
 }
 OnPluginUnload.Weather {
 }
@@ -9,7 +12,19 @@ WeatherMenu {
     "【 天気 】\n/
     地域設定 : %( WeatherLocation )\n/
 	\_a[OnSetWeatherPrefecture]地域を指定する。\_a : \_a[OnClearWeatherTime]地域を削除する。\_a\n/
+    \_a[OnSetWeatherOnly]天気だけでも放送する。 : %( WeatherOnlyFlag ) \_a\n/
 	"
+}
+
+OnSetWeatherOnly {
+    if ( WeatherOnlyFlag == "False" ) {
+        WeatherOnlyFlag = "True"
+    } else {
+        WeatherOnlyFlag = "False"
+    }
+
+    _MenuText = MainContents()
+    _MenuText
 }
 
 
